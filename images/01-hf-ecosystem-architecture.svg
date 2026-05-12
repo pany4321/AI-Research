@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF9D00;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#FFD700;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad4" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad5" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="grad6" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#fa709a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fee140;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">Hugging Face 微调生态层次架构</text>
+
+  <!-- Layer 1: LLaMA-Factory -->
+  <g transform="translate(100, 60)" filter="url(#shadow)">
+    <rect width="600" height="60" rx="8" fill="url(#grad1)"/>
+    <text x="300" y="25" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">LLaMA-Factory / Unsloth / Axolotl</text>
+    <text x="300" y="45" text-anchor="middle" font-family="Arial" font-size="12" fill="#fff">一站式微调框架 · Web UI / CLI / Python API</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="400" y1="130" x2="400" y2="150" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Layer 2: TRL -->
+  <g transform="translate(100, 155)" filter="url(#shadow)">
+    <rect width="600" height="50" rx="8" fill="url(#grad2)"/>
+    <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">TRL (强化学习对齐层)</text>
+    <text x="300" y="40" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0e0ff">SFTTrainer / DPOTrainer / PPOTrainer / GRPO</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="400" y1="215" x2="400" y2="235" stroke="#666" stroke-width="2"/>
+
+  <!-- Layer 3: PEFT -->
+  <g transform="translate(100, 240)" filter="url(#shadow)">
+    <rect width="600" height="50" rx="8" fill="url(#grad3)"/>
+    <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">PEFT (参数高效微调层)</text>
+    <text x="300" y="40" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffe0e0">LoRA / QLoRA / DoRA / AdaLoRA / Prefix Tuning</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="400" y1="300" x2="400" y2="320" stroke="#666" stroke-width="2"/>
+
+  <!-- Layer 4: Accelerate -->
+  <g transform="translate(100, 325)" filter="url(#shadow)">
+    <rect width="600" height="50" rx="8" fill="url(#grad4)"/>
+    <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Accelerate (分布式训练引擎)</text>
+    <text x="300" y="40" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0f0ff">DDP / DeepSpeed ZeRO / FSDP / 混合精度</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="400" y1="385" x2="400" y2="405" stroke="#666" stroke-width="2"/>
+
+  <!-- Layer 5: Transformers -->
+  <g transform="translate(100, 410)" filter="url(#shadow)">
+    <rect width="600" height="50" rx="8" fill="url(#grad5)"/>
+    <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Transformers (核心模型层)</text>
+    <text x="300" y="40" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0fff0">AutoModel / Pipeline / Trainer / Tokenizer</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="400" y1="470" x2="400" y2="490" stroke="#666" stroke-width="2"/>
+
+  <!-- Layer 6: Datasets -->
+  <g transform="translate(100, 495)" filter="url(#shadow)">
+    <rect width="600" height="50" rx="8" fill="url(#grad6)"/>
+    <text x="300" y="22" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Datasets (数据处理层)</text>
+    <text x="300" y="40" text-anchor="middle" font-family="Arial" font-size="11" fill="#fff8e0">load_dataset / DatasetDict / Map / Filter / Streaming</text>
+  </g>
+
+  <!-- PyTorch Foundation label -->
+  <text x="400" y="575" text-anchor="middle" font-family="Arial" font-size="12" font-style="italic" fill="#666">↑ 所有层构建于 PyTorch 之上 (Tensor / nn.Module / Autograd)</text>
+</svg>

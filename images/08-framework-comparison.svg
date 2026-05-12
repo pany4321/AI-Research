@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 750">
+  <defs>
+    <linearGradient id="llamaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d35400;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="unslothGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#00b894;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00cec9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="axolotlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6c5ce7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#a29bfe;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="500" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="bold" fill="#1a1a2e">三大微调框架横向对比与选型指南</text>
+
+  <!-- Three Framework Cards -->
+
+  <!-- LLaMA-Factory -->
+  <g transform="translate(30, 70)" filter="url(#shadow)">
+    <rect width="300" height="320" rx="10" fill="url(#llamaGrad)"/>
+    <text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#fff">🦙 LLaMA-Factory</text>
+    <text x="150" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#ffe0c0">HiYouga 团队 · 2023 年至今</text>
+
+    <!-- Feature list -->
+    <g transform="translate(15, 70)">
+      <text x="0" y="0" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">核心特性:</text>
+      <text x="10" y="25" font-family="Arial" font-size="11" fill="#fff">✅ Web UI (LlamaBoard)</text>
+      <text x="10" y="45" font-family="Arial" font-size="11" fill="#fff">✅ CLI / Python API</text>
+      <text x="10" y="65" font-family="Arial" font-size="11" fill="#fff">✅ 100+ 模型支持</text>
+      <text x="10" y="85" font-family="Arial" font-size="11" fill="#fff">✅ SFT/DPO/ORPO/PPO</text>
+      <text x="10" y="105" font-family="Arial" font-size="11" fill="#fff">✅ LoRA/QLoRA/全量微调</text>
+      <text x="10" y="125" font-family="Arial" font-size="11" fill="#fff">✅ DeepSpeed/FSDP</text>
+      <text x="10" y="145" font-family="Arial" font-size="11" fill="#fff">✅ 模型导出 (GGUF/Ollama)</text>
+      <text x="10" y="165" font-family="Arial" font-size="11" fill="#fff">✅ 中文文档完善</text>
+    </g>
+
+    <!-- Bottom stats -->
+    <g transform="translate(15, 250)">
+      <rect width="270" height="55" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="135" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">适用场景</text>
+      <text x="135" y="40" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">企业级应用 · 多模型支持 · 一站式需求</text>
+      <text x="135" y="55" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">GitHub Stars: 20k+</text>
+    </g>
+  </g>
+
+  <!-- Unsloth -->
+  <g transform="translate(350, 70)" filter="url(#shadow)">
+    <rect width="300" height="320" rx="10" fill="url(#unslothGrad)"/>
+    <text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#fff">⚡ Unsloth</text>
+    <text x="150" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0ffff">Unsloth AI 团队 · 2024 年至今</text>
+
+    <!-- Feature list -->
+    <g transform="translate(15, 70)">
+      <text x="0" y="0" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">核心特性:</text>
+      <text x="10" y="25" font-family="Arial" font-size="11" fill="#fff">✅ 2x 训练速度优化</text>
+      <text x="10" y="45" font-family="Arial" font-size="11" fill="#fff">✅ 60% 显存降低</text>
+      <text x="10" y="65" font-family="Arial" font-size="11" fill="#fff">✅ 自定义 CUDA Kernel</text>
+      <text x="10" y="85" font-family="Arial" font-size="11" fill="#fff">✅ Flash Attention 集成</text>
+      <text x="10" y="105" font-family="Arial" font-size="11" fill="#fff">✅ Web UI (Studio)</text>
+      <text x="10" y="125" font-family="Arial" font-size="11" fill="#fff">✅ Colab/Kaggle 友好</text>
+      <text x="10" y="145" font-family="Arial" font-size="11" fill="#fff">✅ 500+ 模型支持</text>
+      <text x="10" y="165" font-family="Arial" font-size="11" fill="#fff">✅ 动态 4-bit 量化</text>
+    </g>
+
+    <!-- Bottom stats -->
+    <g transform="translate(15, 250)">
+      <rect width="270" height="55" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="135" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">适用场景</text>
+      <text x="135" y="40" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">快速原型 · 资源受限 · 单卡训练</text>
+      <text x="135" y="55" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">GitHub Stars: 25k+</text>
+    </g>
+  </g>
+
+  <!-- Axolotl -->
+  <g transform="translate(670, 70)" filter="url(#shadow)">
+    <rect width="300" height="320" rx="10" fill="url(#axolotlGrad)"/>
+    <text x="150" y="35" text-anchor="middle" font-family="Arial" font-size="18" font-weight="bold" fill="#fff">🦎 Axolotl</text>
+    <text x="150" y="55" text-anchor="middle" font-family="Arial" font-size="11" fill="#f0e0ff">Open Source Community · 2023 年至今</text>
+
+    <!-- Feature list -->
+    <g transform="translate(15, 70)">
+      <text x="0" y="0" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">核心特性:</text>
+      <text x="10" y="25" font-family="Arial" font-size="11" fill="#fff">✅ YAML 配置驱动</text>
+      <text x="10" y="45" font-family="Arial" font-size="11" fill="#fff">✅ 先进训练算法 (GRPO)</text>
+      <text x="10" y="65" font-family="Arial" font-size="11" fill="#fff">✅ Async Gradient Packing</text>
+      <text x="10" y="85" font-family="Arial" font-size="11" fill="#fff">✅ ScatterMoE 内核优化</text>
+      <text x="10" y="105" font-family="Arial" font-size="11" fill="#fff">✅ 多模态支持</text>
+      <text x="10" y="125" font-family="Arial" font-size="11" fill="#fff">✅ ReLoRA 支持</text>
+      <text x="10" y="145" font-family="Arial" font-size="11" fill="#fff">✅ 研究导向特性</text>
+      <text x="10" y="165" font-family="Arial" font-size="11" fill="#fff">✅ 社区驱动开发</text>
+    </g>
+
+    <!-- Bottom stats -->
+    <g transform="translate(15, 250)">
+      <rect width="270" height="55" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="135" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">适用场景</text>
+      <text x="135" y="40" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">前沿研究 · 新算法实验 · MoE 模型</text>
+      <text x="135" y="55" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">GitHub Stars: 8k+</text>
+    </g>
+  </g>
+
+  <!-- Comparison Table -->
+  <g transform="translate(30, 420)" filter="url(#shadow)">
+    <rect width="940" height="200" rx="10" fill="#ecf0f1"/>
+    <text x="470" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">📊 详细对比表</text>
+
+    <!-- Table header -->
+    <g transform="translate(0, 45)">
+      <rect width="940" height="30" fill="#bdc3c7"/>
+      <text x="150" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="#2c3e50">对比维度</text>
+      <text x="290" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="#d35400">LLaMA-Factory</text>
+      <text x="520" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="#00b894">Unsloth</text>
+      <text x="750" y="20" font-family="Arial" font-size="12" font-weight="bold" fill="#6c5ce7">Axolotl</text>
+    </g>
+
+    <!-- Rows -->
+    <g transform="translate(0, 80)">
+      <!-- Row 1 -->
+      <rect width="940" height="30" fill="#fff"/>
+      <text x="150" y="20" font-family="Arial" font-size="11" fill="#2c3e50">上手难度</text>
+      <text x="290" y="20" font-family="Arial" font-size="11" fill="#2c3e50">⭐⭐⭐⭐⭐ (最简单)</text>
+      <text x="520" y="20" font-family="Arial" font-size="11" fill="#2c3e50">⭐⭐⭐⭐☆ (简单)</text>
+      <text x="750" y="20" font-family="Arial" font-size="11" fill="#2c3e50">⭐⭐⭐☆☆ (中等)</text>
+
+      <!-- Row 2 -->
+      <rect y="30" width="940" height="30" fill="#f8f9fa"/>
+      <text x="150" y="50" font-family="Arial" font-size="11" fill="#2c3e50">训练速度</text>
+      <text x="290" y="50" font-family="Arial" font-size="11" fill="#2c3e50">标准</text>
+      <text x="520" y="50" font-family="Arial" font-size="11" fill="#2c3e50">🚀 2x 加速</text>
+      <text x="750" y="50" font-family="Arial" font-size="11" fill="#2c3e50">标准 + 优化内核</text>
+
+      <!-- Row 3 -->
+      <rect y="60" width="940" height="30" fill="#fff"/>
+      <text x="150" y="80" font-family="Arial" font-size="11" fill="#2c3e50">显存效率</text>
+      <text x="290" y="80" font-family="Arial" font-size="11" fill="#2c3e50">标准</text>
+      <text x="520" y="80" font-family="Arial" font-size="11" fill="#2c3e50">⭐ 最优</text>
+      <text x="750" y="80" font-family="Arial" font-size="11" fill="#2c3e50">标准</text>
+
+      <!-- Row 4 -->
+      <rect y="90" width="940" height="30" fill="#f8f9fa"/>
+      <text x="150" y="100" font-family="Arial" font-size="11" fill="#2c3e50">模型覆盖</text>
+      <text x="290" y="100" font-family="Arial" font-size="11" fill="#2c3e50">100+</text>
+      <text x="520" y="100" font-family="Arial" font-size="11" fill="#2c3e50">500+</text>
+      <text x="750" y="100" font-family="Arial" font-size="11" fill="#2c3e50">主流模型</text>
+
+      <!-- Row 5 -->
+      <rect y="120" width="940" height="30" fill="#fff"/>
+      <text x="150" y="140" font-family="Arial" font-size="11" fill="#2c3e50">RLHF 支持</text>
+      <text x="290" y="140" font-family="Arial" font-size="11" fill="#2c3e50">DPO/ORPO/SimPO</text>
+      <text x="520" y="140" font-family="Arial" font-size="11" fill="#2c3e50">有限</text>
+      <text x="750" y="140" font-family="Arial" font-size="11" fill="#2c3e50">GRPO/DPO</text>
+    </g>
+  </g>
+
+  <!-- Selection Guide -->
+  <g transform="translate(30, 640)" filter="url(#shadow)">
+    <rect width="940" height="90" rx="10" fill="#2c3e50"/>
+    <text x="470" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">🎯 选型指南</text>
+
+    <g transform="translate(20, 40)">
+      <text x="0" y="0" font-family="Arial" font-size="11" fill="#f39c12">选择 LLaMA-Factory 如果：</text>
+      <text x="280" y="0" font-family="Arial" font-size="11" fill="#00b894">选择 Unsloth 如果：</text>
+      <text x="560" y="0" font-family="Arial" font-size="11" fill="#a29bfe">选择 Axolotl 如果：</text>
+
+      <text x="0" y="20" font-family="Arial" font-size="10" fill="#fff">· 需要 Web UI 和完整工具链</text>
+      <text x="280" y="20" font-family="Arial" font-size="10" fill="#fff">· 追求最快训练速度</text>
+      <text x="560" y="20" font-family="Arial" font-size="10" fill="#fff">· 想尝试最新研究算法</text>
+
+      <text x="0" y="35" font-family="Arial" font-size="10" fill="#fff">· 中文支持和文档重要</text>
+      <text x="280" y="35" font-family="Arial" font-size="10" fill="#fff">· 显存资源有限</text>
+      <text x="560" y="35" font-family="Arial" font-size="10" fill="#fff">· 研究 MoE/ReLoRA 等特性</text>
+
+      <text x="0" y="50" font-family="Arial" font-size="10" fill="#fff">· 企业级生产环境</text>
+      <text x="280" y="50" font-family="Arial" font-size="10" fill="#fff">· 快速原型验证</text>
+      <text x="560" y="50" font-family="Arial" font-size="10" fill="#fff">· 社区协作开发</text>
+    </g>
+  </g>
+</svg>

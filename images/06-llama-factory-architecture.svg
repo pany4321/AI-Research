@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <linearGradient id="llamaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f39c12;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#d35400;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dataGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#27ae60;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2ecc71;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="modelGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#8e44ad;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#9b59b6;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="trainGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#e74c3c;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#c0392b;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">LLaMA-Factory 框架架构与 HF 生态调用关系</text>
+
+  <!-- User Interface Layer -->
+  <g transform="translate(50, 60)" filter="url(#shadow)">
+    <rect width="800" height="70" rx="10" fill="url(#llamaGrad)"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🖥️ 用户界面层</text>
+    <text x="400" y="50" text-anchor="middle" font-family="Arial" font-size="12" fill="#ffe0c0">Web UI (LlamaBoard) · CLI (llamafactory-cli) · Python API</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="140" x2="450" y2="160" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Four Core Modules -->
+  <g transform="translate(50, 170)" filter="url(#shadow)">
+    <rect width="800" height="180" rx="10" fill="#34495e"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">📦 LLaMA-Factory 核心模块</text>
+
+    <!-- Data Module -->
+    <g transform="translate(20, 45)">
+      <rect width="180" height="120" rx="5" fill="url(#dataGrad)"/>
+      <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">数据模块</text>
+      <text x="90" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· loader.py - 数据集加载</text>
+      <text x="90" y="65" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· template.py - 对话模板</text>
+      <text x="90" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· aligner.py - 格式对齐</text>
+      <text x="90" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· collator.py - Data Collator</text>
+      <text x="90" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0ffe0">↓ 调用 Datasets + Transformers</text>
+    </g>
+
+    <!-- Model Module -->
+    <g transform="translate(220, 45)">
+      <rect width="180" height="120" rx="5" fill="url(#modelGrad)"/>
+      <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">模型模块</text>
+      <text x="90" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· loader.py - 模型加载</text>
+      <text x="90" y="65" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· adapter.py - PEFT 注入</text>
+      <text x="90" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· patcher.py - 优化补丁</text>
+      <text x="90" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· registry.py - 模型注册表</text>
+      <text x="90" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">↓ 调用 Transformers + PEFT</text>
+    </g>
+
+    <!-- Training Module -->
+    <g transform="translate(420, 45)">
+      <rect width="180" height="120" rx="5" fill="url(#trainGrad)"/>
+      <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">训练模块</text>
+      <text x="90" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· tuner.py - 训练入口</text>
+      <text x="90" y="65" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· args.py - 参数解析</text>
+      <text x="90" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· custom_trainer.py</text>
+      <text x="90" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· callbacks.py - 回调</text>
+      <text x="90" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#ffe0e0">↓ 调用 Trainer + TRL + Accelerate</text>
+    </g>
+
+    <!-- Export Module -->
+    <g transform="translate(620, 45)">
+      <rect width="180" height="120" rx="5" fill="#1abc9c"/>
+      <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">导出/部署模块</text>
+      <text x="90" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 合并 LoRA 权重</text>
+      <text x="90" y="65" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 量化 (GGUF/AWQ/GPTQ)</text>
+      <text x="90" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· Ollama/VLLM 导出</text>
+      <text x="90" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 模型测试验证</text>
+      <text x="90" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0ffff">→ 独立于 HF 生态</text>
+    </g>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="360" x2="450" y2="380" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- HF Ecosystem -->
+  <g transform="translate(50, 390)" filter="url(#shadow)">
+    <rect width="800" height="180" rx="10" fill="#ecf0f1"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#2c3e50">🤗 Hugging Face 生态系统</text>
+
+    <g transform="translate(20, 45)">
+      <!-- Transformers -->
+      <rect width="140" height="120" rx="5" fill="#ffd700"/>
+      <text x="70" y="35" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#333">Transformers</text>
+      <text x="70" y="60" text-anchor="middle" font-family="Arial" font-size="9" fill="#666">AutoModel</text>
+      <text x="70" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#666">Tokenizer</text>
+      <text x="70" y="100" text-anchor="middle" font-family="Arial" font-size="9" fill="#666">Trainer</text>
+      <text x="70" y="115" text-anchor="middle" font-family="Arial" font-size="9" fill="#666">GenerationConfig</text>
+
+      <!-- Datasets -->
+      <rect x="160" y="0" width="140" height="120" rx="5" fill="#e74c3c"/>
+      <text x="230" y="35" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Datasets</text>
+      <text x="230" y="60" text-anchor="middle" font-family="Arial" font-size="9" fill="#fcc">load_dataset</text>
+      <text x="230" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#fcc">Dataset.map</text>
+      <text x="230" y="100" text-anchor="middle" font-family="Arial" font-size="9" fill="#fcc">IterableDataset</text>
+
+      <!-- PEFT -->
+      <rect x="320" y="0" width="140" height="120" rx="5" fill="#3498db"/>
+      <text x="390" y="35" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">PEFT</text>
+      <text x="390" y="60" text-anchor="middle" font-family="Arial" font-size="9" fill="#cce">get_peft_model</text>
+      <text x="390" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#cce">LoraConfig</text>
+      <text x="390" y="100" text-anchor="middle" font-family="Arial" font-size="9" fill="#cce">merge_and_unload</text>
+
+      <!-- Accelerate -->
+      <rect x="480" y="0" width="140" height="120" rx="5" fill="#2ecc71"/>
+      <text x="550" y="35" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Accelerate</text>
+      <text x="550" y="60" text-anchor="middle" font-family="Arial" font-size="9" fill="#cfc">Accelerator</text>
+      <text x="550" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#cfc">DeepSpeedPlugin</text>
+      <text x="550" y="100" text-anchor="middle" font-family="Arial" font-size="9" fill="#cfc">FSDPPlugin</text>
+
+      <!-- TRL -->
+      <rect x="640" y="0" width="140" height="120" rx="5" fill="#9b59b6"/>
+      <text x="710" y="35" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">TRL</text>
+      <text x="710" y="60" text-anchor="middle" font-family="Arial" font-size="9" fill="#edd">SFTTrainer</text>
+      <text x="710" y="80" text-anchor="middle" font-family="Arial" font-size="9" fill="#edd">DPOTrainer</text>
+      <text x="710" y="100" text-anchor="middle" font-family="Arial" font-size="9" fill="#edd">PPOTrainer</text>
+    </g>
+  </g>
+
+  <!-- Connection lines showing the relationship -->
+  <g transform="translate(0, 0)">
+    <!-- Data -> Datasets + Transformers -->
+    <path d="M 140 350 L 140 370 L 230 385" stroke="#27ae60" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="160" y="365" font-family="Arial" font-size="9" fill="#27ae60">调用</text>
+
+    <!-- Model -> Transformers + PEFT -->
+    <path d="M 340 350 L 340 370 L 390 385" stroke="#8e44ad" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="360" y="365" font-family="Arial" font-size="9" fill="#8e44ad">调用</text>
+
+    <!-- Training -> Trainer + TRL + Accelerate -->
+    <path d="M 540 350 L 540 370 L 590 385" stroke="#e74c3c" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+    <text x="560" y="365" font-family="Arial" font-size="9" fill="#e74c3c">调用</text>
+  </g>
+
+  <!-- Bottom legend -->
+  <g transform="translate(50, 590)" filter="url(#shadow)">
+    <rect width="800" height="80" rx="10" fill="#fff"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#2c3e50">🔑 核心价值：一站式封装</text>
+    <text x="400" y="50" text-anchor="middle" font-family="Arial" font-size="11" fill="#666">LLaMA-Factory 将 HF 生态的复杂性封装为统一接口，用户只需关注配置而非代码</text>
+    <text x="400" y="65" text-anchor="middle" font-family="Arial" font-size="11" fill="#666">Web UI / CLI / Python API 三种入口 → 同一套底层实现</text>
+  </g>
+</svg>

@@ -1,0 +1,1467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 自动化渗透测试开源平台深度研究报告 2025-2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a5c4a;
+  --primary-light: #2d8a6f;
+  --primary-dark: #0e3d31;
+  --accent: #e8b84b;
+  --accent-light: #f0d080;
+  --bg: #f8f9fa;
+  --bg-card: #ffffff;
+  --text: #1a1a2e;
+  --text-secondary: #555;
+  --text-muted: #888;
+  --border: #e2e8f0;
+  --sidebar-w: 280px;
+  --shadow: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,.08);
+  --radius: 10px;
+  --radius-sm: 6px;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'Inter', 'Noto Sans SC', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  display: flex;
+}
+a { color: var(--primary); text-decoration: none; }
+a:hover { color: var(--primary-light); }
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: var(--sidebar-w); height: 100vh;
+  background: var(--primary-dark);
+  color: #fff;
+  overflow-y: auto;
+  z-index: 100;
+  padding: 24px 0;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 2px; }
+.sidebar .logo {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  margin-bottom: 12px;
+}
+.sidebar .logo h1 { font-size: .95rem; font-weight: 700; line-height: 1.4; }
+.sidebar .logo .sub { font-size: .75rem; color: rgba(255,255,255,.6); margin-top: 4px; }
+.sidebar nav a {
+  display: block;
+  padding: 6px 20px;
+  font-size: .82rem;
+  color: rgba(255,255,255,.75);
+  transition: all .15s;
+  border-left: 3px solid transparent;
+}
+.sidebar nav a:hover { color: #fff; background: rgba(255,255,255,.06); }
+.sidebar nav a.active { color: var(--accent); border-left-color: var(--accent); background: rgba(255,255,255,.08); }
+.sidebar nav .l1 { font-weight: 600; font-size: .85rem; padding-top: 10px; padding-bottom: 6px; color: rgba(255,255,255,.9); }
+.sidebar nav .l2 { padding-left: 32px; font-size: .78rem; }
+
+/* Main */
+.main { margin-left: var(--sidebar-w); flex: 1; min-width: 0; padding: 0; }
+.hero {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--primary-light) 100%);
+  color: #fff;
+  padding: 60px 48px 48px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::after {
+  content: '';
+  position: absolute; top: -50%; right: -20%;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(232,184,75,.08) 0%, transparent 70%);
+  border-radius: 50%;
+}
+.hero h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.3; margin-bottom: 12px; position: relative; }
+.hero .subtitle { font-size: 1.05rem; color: rgba(255,255,255,.8); max-width: 680px; position: relative; }
+.hero .meta { margin-top: 20px; display: flex; gap: 24px; flex-wrap: wrap; font-size: .85rem; color: rgba(255,255,255,.65); position: relative; }
+.hero .meta span { display: flex; align-items: center; gap: 4px; }
+.content { padding: 40px 48px 80px; max-width: 960px; }
+
+/* Typography */
+.content h2 {
+  font-size: 1.65rem;
+  font-weight: 700;
+  margin: 48px 0 16px;
+  padding-bottom: 8px;
+  border-bottom: 3px solid var(--primary);
+  color: var(--primary-dark);
+}
+.content h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin: 32px 0 12px;
+  color: var(--primary);
+}
+.content h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 20px 0 8px;
+  color: var(--text);
+}
+.content p { margin-bottom: 14px; color: #333; }
+.content ul, .content ol { margin-bottom: 14px; padding-left: 24px; }
+.content li { margin-bottom: 4px; }
+.content strong { color: var(--primary-dark); }
+.content blockquote {
+  border-left: 4px solid var(--primary);
+  background: #f0f7f4;
+  padding: 12px 20px;
+  margin: 16px 0;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: .95rem;
+  color: #444;
+}
+.content blockquote strong { color: var(--primary); }
+
+/* Tables */
+.tbl-wrap { overflow-x: auto; margin: 16px 0 24px; border-radius: var(--radius-sm); border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: .85rem; }
+th { background: var(--primary-dark); color: #fff; padding: 10px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:nth-child(even) td { background: #f8faf8; }
+tr:hover td { background: #edf5f0; }
+
+/* Cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; margin: 16px 0 24px; }
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.card h4 { margin: 0 0 6px; font-size: .95rem; }
+.card p { font-size: .85rem; color: var(--text-secondary); margin: 0; }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: .75rem; font-weight: 500; }
+.tag-green { background: #e6f7e6; color: #1a7a1a; }
+.tag-blue { background: #e6f0fa; color: #1a5c9a; }
+.tag-orange { background: #fff3e6; color: #b85a1a; }
+.tag-red { background: #fde8e8; color: #b81a1a; }
+.tag-purple { background: #f0e6ff; color: #6a1ab8; }
+.tag-gray { background: #f0f0f0; color: #555; }
+
+/* SVG Container */
+.fig { margin: 24px 0; text-align: center; }
+.fig svg { max-width: 100%; height: auto; border-radius: var(--radius-sm); }
+.fig .caption { font-size: .82rem; color: var(--text-muted); margin-top: 8px; }
+
+/* Accordion / details */
+details { margin: 12px 0; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+details summary { padding: 10px 16px; cursor: pointer; font-weight: 600; font-size: .9rem; background: #f8faf8; }
+details summary:hover { background: #edf5f0; }
+details .body { padding: 12px 16px; }
+
+/* Code */
+code { font-family: 'JetBrains Mono', monospace; font-size: .82rem; background: #f0f0f0; padding: 1px 6px; border-radius: 3px; }
+pre { font-family: 'JetBrains Mono', monospace; font-size: .82rem; background: #1a1a2e; color: #e8e8e8; padding: 16px; border-radius: var(--radius-sm); overflow-x: auto; margin: 12px 0; }
+pre .kw { color: #7ec8e3; }
+pre .cm { color: #6a9955; }
+pre .str { color: #ce9178; }
+pre .op { color: #d4d4d4; }
+
+/* Highlight Box */
+.highlight-box {
+  background: linear-gradient(135deg, #f0f7f4, #e8f0ec);
+  border: 1px solid var(--primary-light);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin: 16px 0;
+}
+.highlight-box h4 { color: var(--primary-dark); margin: 0 0 8px; }
+.highlight-box p { margin: 0; font-size: .9rem; }
+
+/* Comparison Matrix */
+.matrix { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin: 16px 0; }
+.matrix-row { display: grid; grid-template-columns: 140px 1fr; }
+.matrix-row.header { background: var(--primary-dark); color: #fff; font-weight: 600; }
+.matrix-cell { padding: 8px 12px; background: #fff; font-size: .85rem; }
+.matrix-row:nth-child(even) .matrix-cell { background: #f8faf8; }
+
+/* Progress bar */
+.progress { display: flex; gap: 4px; align-items: center; }
+.progress-bar { flex: 1; height: 8px; background: #e8e8e8; border-radius: 4px; overflow: hidden; }
+.progress-bar .fill { height: 100%; border-radius: 4px; transition: width .5s; }
+.progress .label { font-size: .78rem; color: var(--text-secondary); min-width: 40px; text-align: right; }
+
+/* Priority Matrix */
+.pri-grid { display: grid; grid-template-columns: 1fr 80px 80px 80px; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; margin: 16px 0; }
+.pri-header { background: var(--primary-dark); color: #fff; padding: 8px 12px; font-weight: 600; font-size: .82rem; }
+.pri-cell { padding: 6px 12px; background: #fff; font-size: .82rem; }
+.pri-p0 { background: #fde8e8 !important; text-align: center; font-weight: 600; color: #b81a1a; }
+.pri-p1 { background: #fff3e6 !important; text-align: center; font-weight: 600; color: #b85a1a; }
+.pri-p2 { background: #f0f7f4 !important; text-align: center; font-weight: 600; color: #1a7a1a; }
+.pri-na { background: #f8f8f8 !important; text-align: center; color: #ccc; }
+
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 40px 24px 32px; }
+  .hero h1 { font-size: 1.5rem; }
+  .content { padding: 24px 20px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .matrix-row { grid-template-columns: 100px 1fr; }
+}
+@media print {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .hero { padding: 40px; }
+}
+</style>
+</head>
+<body>
+
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <h1>AI 自动化渗透测试<br>开源平台深度研究报告</h1>
+    <div class="sub">2025-2026 · 全七章</div>
+  </div>
+  <nav>
+    <a class="l1" href="#ch1">一、市场格局与趋势</a>
+    <a class="l2" href="#s11">爆发式增长的18个月</a>
+    <a class="l2" href="#s12">核心驱动力</a>
+    <a class="l2" href="#s13">分类体系</a>
+    <a class="l2" href="#s14">主要参与者</a>
+    <a class="l1" href="#ch2">二、Web渗透测试工具</a>
+    <a class="l2" href="#s21">Strix</a>
+    <a class="l2" href="#s22">BugTrace-AI</a>
+    <a class="l2" href="#s23">DarkMoon (Web)</a>
+    <a class="l2" href="#s24">H-Pentest</a>
+    <a class="l2" href="#s25">MAPTA</a>
+    <a class="l2" href="#s26">综合对比</a>
+    <a class="l1" href="#ch3">三、基础设施渗透工具</a>
+    <a class="l2" href="#s31">CyberStrike</a>
+    <a class="l2" href="#s32">PentAGI</a>
+    <a class="l2" href="#s33">Zen-AI-Pentest</a>
+    <a class="l2" href="#s34">DarkMoon (Infra)</a>
+    <a class="l2" href="#s35">Asgard</a>
+    <a class="l2" href="#s36">综合对比</a>
+    <a class="l1" href="#ch4">四、AI模型专项测试</a>
+    <a class="l1" href="#ch5">五、架构模式深度对比</a>
+    <a class="l1" href="#ch6">六、LLM安全悖论解释</a>
+    <a class="l1" href="#ch7">七、自研路线与建议</a>
+  </nav>
+</aside>
+
+<div class="main">
+  <div class="hero">
+    <h1>AI 自动化渗透测试<br>开源平台深度研究报告</h1>
+    <p class="subtitle">2025-2026 年开源 AI 驱动渗透测试工具全景分析、架构对比与自研路线 — 覆盖 20+ 代表性项目，70+ 工具市场全景</p>
+    <div class="meta">
+      <span>📄 v1.0</span>
+      <span>📅 2026-05-11</span>
+      <span>🎯 Web 渗透 / 基础设施 / AI 模型</span>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===================== CHAPTER 1 ===================== -->
+    <h2 id="ch1">一、市场格局与趋势</h2>
+
+    <h3 id="s11">1.1 爆发式增长的 18 个月</h3>
+    <p>2024 年初，开源 AI 驱动的自动化渗透测试工具尚不足 <strong>5 个</strong>。到 2026 年 3 月，这一数字已激增至 <strong>70 个以上</strong>。这一爆发式增长的背后是多重技术因素的汇聚。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 800 320" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="tg1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#1a5c4a"/>
+            <stop offset="100%" stop-color="#2d8a6f"/>
+          </linearGradient>
+          <linearGradient id="tg2" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#e8b84b"/>
+            <stop offset="100%" stop-color="#f0d080"/>
+          </linearGradient>
+        </defs>
+        <!-- Timeline axis -->
+        <line x1="60" y1="260" x2="760" y2="260" stroke="#ccc" stroke-width="2"/>
+        <!-- Arrows -->
+        <polygon points="760,260 750,254 750,266" fill="#ccc"/>
+        <!-- Time points -->
+        <circle cx="100" cy="260" r="6" fill="#1a5c4a"/>
+        <text x="100" y="240" text-anchor="middle" font-size="11" fill="#555">2024 Q1</text>
+        <text x="100" y="282" text-anchor="middle" font-size="10" fill="#888">GPT-4 发布</text>
+        <text x="100" y="298" text-anchor="middle" font-size="10" fill="#888">概念验证</text>
+
+        <circle cx="200" cy="260" r="6" fill="#1a5c4a"/>
+        <text x="200" y="240" text-anchor="middle" font-size="11" fill="#555">2024 Q3</text>
+        <text x="200" y="282" text-anchor="middle" font-size="10" fill="#888">PentestGPT 等</text>
+        <text x="200" y="298" text-anchor="middle" font-size="10" fill="#888">单智能体</text>
+
+        <circle cx="330" cy="260" r="8" fill="url(#tg2)" stroke="#b8942a" stroke-width="2"/>
+        <text x="330" y="240" text-anchor="middle" font-size="11" fill="#555">2025 Q1</text>
+        <text x="330" y="218" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">MCP 协议标准化</text>
+
+        <circle cx="440" cy="260" r="8" fill="url(#tg2)" stroke="#b8942a" stroke-width="2"/>
+        <text x="440" y="240" text-anchor="middle" font-size="11" fill="#555">2025 Q2</text>
+        <text x="440" y="218" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">多智能体成为主流</text>
+
+        <circle cx="570" cy="260" r="10" fill="url(#tg1)" stroke="#0e3d31" stroke-width="2"/>
+        <text x="570" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="#1a5c4a">2025 Q3</text>
+        <text x="570" y="212" text-anchor="middle" font-size="11" font-weight="600" fill="#b85a1a">🚀 70+ 工具爆发</text>
+        <text x="570" y="296" text-anchor="middle" font-size="10" fill="#888">CyberStrike / DarkMoon</text>
+
+        <circle cx="690" cy="260" r="10" fill="url(#tg1)" stroke="#0e3d31" stroke-width="2"/>
+        <text x="690" y="236" text-anchor="middle" font-size="11" font-weight="700" fill="#1a5c4a">2026 Q1</text>
+        <text x="690" y="216" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">产品化阶段</text>
+        <text x="690" y="296" text-anchor="middle" font-size="10" fill="#888">PentAGI / Zen-AI</text>
+
+        <!-- Growth curve -->
+        <polyline points="100,290 200,285 330,270 440,250 570,190 690,150" fill="none" stroke="url(#tg1)" stroke-width="3" stroke-dasharray="6,3" opacity=".6"/>
+        <text x="700" y="146" font-size="10" fill="#1a5c4a" opacity=".7">~70+ 工具</text>
+      </svg>
+      <div class="caption">图 1：AI 渗透测试工具市场 18 个月爆发式增长时间线</div>
+    </div>
+
+    <h3 id="s12">1.2 核心驱动力</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>🧠 LLM 能力跃迁</h4>
+        <p>代码生成、推理分析和工具调用能力持续提升，使漏洞识别、攻击链编排和结果解释成为可能。</p>
+      </div>
+      <div class="card">
+        <h4>🔌 MCP 协议标准化</h4>
+        <p>Model Context Protocol 为 AI 代理与安全工具的集成提供了统一接口，Kali Linux 原生支持。</p>
+      </div>
+      <div class="card">
+        <h4>💰 成本断崖式下降</h4>
+        <p>AI 渗透测试比人工成本低 156-3,600 倍，AD 渗透从 $15,000 降至 ~$28.50。</p>
+      </div>
+    </div>
+
+    <h4>成本效益对比</h4>
+    <div class="fig">
+      <svg viewBox="0 0 760 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bars -->
+        <rect x="100" y="180" width="220" height="30" rx="4" fill="#e8b84b" opacity=".8"/>
+        <text x="110" y="200" font-size="12" fill="#333">人工: $15,000 - $50,000</text>
+        <rect x="100" y="130" width="220" height="30" rx="4" fill="#1a5c4a" opacity=".9"/>
+        <text x="110" y="150" font-size="12" fill="#fff">AI: ~$28.50</text>
+        <text x="330" y="150" font-size="11" fill="#1a5c4a" font-weight="600">526x - 1,754x</text>
+        <!-- X axis -->
+        <line x1="80" y1="220" x2="700" y2="220" stroke="#ccc"/>
+        <text x="80" y="260" font-size="11" fill="#555" font-weight="600">AD 环境渗透</text>
+
+        <!-- Second group -->
+        <rect x="100" y="50" width="100" height="30" rx="4" fill="#e8b84b" opacity=".8"/>
+        <text x="110" y="70" font-size="12" fill="#333">人工: 小时级</text>
+        <rect x="100" y="10" width="100" height="30" rx="4" fill="#1a5c4a" opacity=".9"/>
+        <text x="110" y="30" font-size="12" fill="#fff">AI: 秒级</text>
+        <text x="210" y="30" font-size="11" fill="#1a5c4a" font-weight="600">3,600x</text>
+
+        <line x1="80" y1="90" x2="700" y2="90" stroke="#ccc"/>
+        <text x="80" y="105" font-size="11" fill="#555" font-weight="600">端口扫描速度</text>
+
+        <!-- Third group -->
+        <rect x="420" y="50" width="140" height="30" rx="4" fill="#e8b84b" opacity=".8"/>
+        <text x="430" y="70" font-size="12" fill="#333">人工: 30-60%</text>
+        <rect x="420" y="10" width="140" height="30" rx="4" fill="#1a5c4a" opacity=".9"/>
+        <text x="430" y="30" font-size="12" fill="#fff">AI: 87%</text>
+        <text x="570" y="30" font-size="11" fill="#1a5c4a" font-weight="600">~2x</text>
+        <text x="420" y="105" font-size="11" fill="#555" font-weight="600">CVE 利用成功率 (GPT-4)</text>
+      </svg>
+      <div class="caption">图 2：AI vs 人工渗透测试成本效益对比</div>
+    </div>
+
+    <h3 id="s13">1.3 分类体系</h3>
+
+    <p>按攻击目标分类，当前市场工具可分为三大类：</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 800 520" xmlns="http://www.w3.org/2000/svg">
+        <style>
+          .tree-node { fill: #1a5c4a; rx: 6; }
+          .tree-node2 { fill: #2d8a6f; rx: 5; }
+          .tree-node3 { fill: #e8b84b; rx: 4; }
+          .tree-node3w { fill: #f0f7f4; stroke: #2d8a6f; stroke-width: 1.5; rx: 4; }
+          .tree-line { stroke: #ccc; stroke-width: 1.5; fill: none; }
+        </style>
+        <!-- Root -->
+        <rect x="250" y="10" width="300" height="38" class="tree-node"/>
+        <text x="400" y="35" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">AI 自动化渗透测试工具</text>
+
+        <!-- Level 1 lines -->
+        <path class="tree-line" d="M400,48 L400,70 L160,70 L160,90"/>
+        <path class="tree-line" d="M400,48 L400,70 L400,90"/>
+        <path class="tree-line" d="M400,48 L400,70 L640,70 L640,90"/>
+
+        <!-- Level 1 nodes -->
+        <rect x="60" y="90" width="200" height="34" class="tree-node2"/>
+        <text x="160" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Web 渗透测试</text>
+        <rect x="300" y="90" width="200" height="34" class="tree-node2"/>
+        <text x="400" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">基础设施渗透</text>
+        <rect x="540" y="90" width="200" height="34" class="tree-node2"/>
+        <text x="640" y="112" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">AI 模型专项测试</text>
+
+        <!-- Web children -->
+        <path class="tree-line" d="M160,124 L160,150"/>
+        <path class="tree-line" d="M160,150 L60,150 L60,160"/>
+        <path class="tree-line" d="M160,150 L160,160"/>
+        <path class="tree-line" d="M160,150 L260,150 L260,160"/>
+        <path class="tree-line" d="M160,150 L60,150 L60,200"/>
+        <path class="tree-line" d="M160,150 L160,200"/>
+
+        <rect x="20" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="60" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">Strix</text>
+        <rect x="110" y="160" width="100" height="28" class="tree-node3w"/>
+        <text x="160" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">BugTrace-AI</text>
+        <rect x="220" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="260" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">H-Pentest</text>
+        <rect x="20" y="200" width="80" height="28" class="tree-node3w"/>
+        <text x="60" y="219" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">MAPTA</text>
+        <rect x="110" y="200" width="100" height="28" class="tree-node3w"/>
+        <text x="160" y="219" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">AI-VAPT</text>
+        <text x="260" y="219" font-size="10" fill="#888">+ ...</text>
+
+        <!-- Infra children -->
+        <path class="tree-line" d="M400,124 L400,150"/>
+        <path class="tree-line" d="M400,150 L280,150 L280,160"/>
+        <path class="tree-line" d="M400,150 L400,160"/>
+        <path class="tree-line" d="M400,150 L520,150 L520,160"/>
+        <path class="tree-line" d="M400,150 L280,150 L280,200"/>
+        <path class="tree-line" d="M400,150 L400,200"/>
+        <path class="tree-line" d="M400,150 L520,150 L520,200"/>
+
+        <rect x="240" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="280" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">CyberStrike</text>
+        <rect x="340" y="160" width="120" height="28" class="tree-node3w"/>
+        <text x="400" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">PentAGI</text>
+        <rect x="480" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="520" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">Zen-AI</text>
+        <rect x="240" y="200" width="80" height="28" class="tree-node3w"/>
+        <text x="280" y="219" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">DarkMoon</text>
+        <rect x="340" y="200" width="120" height="28" class="tree-node3w"/>
+        <text x="400" y="219" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">Asgard</text>
+        <rect x="480" y="200" width="80" height="28" class="tree-node3w"/>
+        <text x="520" y="219" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">CAI</text>
+
+        <!-- AI children -->
+        <path class="tree-line" d="M640,124 L640,150"/>
+        <path class="tree-line" d="M640,150 L560,150 L560,160"/>
+        <path class="tree-line" d="M640,150 L640,160"/>
+        <path class="tree-line" d="M640,150 L720,150 L720,160"/>
+
+        <rect x="520" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="560" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">Garak</text>
+        <rect x="600" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="640" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">DeepTeam</text>
+        <rect x="680" y="160" width="80" height="28" class="tree-node3w"/>
+        <text x="720" y="179" text-anchor="middle" font-size="10" fill="#1a5c4a" font-weight="600">ARTKIT</text>
+
+        <!-- Arrow from right side -->
+        <text x="680" y="240" font-size="10" fill="#888" font-style="italic">... 20+ 工具覆盖</text>
+      </svg>
+      <div class="caption">图 3：AI 渗透测试工具按攻击目标分类体系</div>
+    </div>
+
+    <h3 id="s14">1.4 主要参与者</h3>
+
+    <p>当前市场参与者分为三类：</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4><span class="tag tag-green">社区驱动</span></h4>
+        <p><strong>CyberStrike</strong> (AGPL-3.0) · <strong>DarkMoon</strong> · <strong>Strix</strong> (Apache 2.0)<br>社区主导，活跃度高，迭代迅速。</p>
+      </div>
+      <div class="card">
+        <h4><span class="tag tag-blue">学术研究</span></h4>
+        <p><strong>xOffense</strong> (Qwen3-32B) · <strong>MAPTA</strong> (76.9%) · <strong>VulnSage</strong> (146 0-day)<br>论文驱动，方法论创新。</p>
+      </div>
+      <div class="card">
+        <h4><span class="tag tag-purple">商业开源</span></h4>
+        <p><strong>Garak</strong> (NVIDIA) · <strong>DeepTeam</strong> · <strong>Asgard</strong> (MIT)<br>企业支持，质量有保障。</p>
+      </div>
+    </div>
+
+    <!-- ===================== CHAPTER 2 ===================== -->
+    <h2 id="ch2">二、Web 渗透测试工具深度分析</h2>
+
+    <h3 id="s21">2.1 Strix</h3>
+
+    <p><strong>Strix</strong>（3.1k+ GitHub Stars）是一个开源 AI 代理系统，模拟人类攻击者的行为模式 — 运行代码、探索应用、验证真实漏洞并生成 PoC。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg">
+        <rect x="180" y="10" width="360" height="44" rx="6" fill="#1a5c4a"/>
+        <text x="360" y="38" text-anchor="middle" font-size="15" font-weight="700" fill="#fff">Strix Orchestrator</text>
+        <text x="360" y="64" text-anchor="middle" font-size="11" fill="#888">LLM 驱动的任务规划与代理调度</text>
+
+        <line x1="360" y1="54" x2="360" y2="80" stroke="#ccc" stroke-dasharray="4,3"/>
+
+        <!-- Agents row -->
+        <rect x="40" y="90" width="140" height="48" rx="6" fill="#2d8a6f"/>
+        <text x="110" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Recon Agent</text>
+        <text x="110" y="127" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">侦察与信息收集</text>
+
+        <rect x="200" y="90" width="140" height="48" rx="6" fill="#2d8a6f"/>
+        <text x="270" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Injection Agent</text>
+        <text x="270" y="127" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">注入测试</text>
+
+        <rect x="360" y="90" width="140" height="48" rx="6" fill="#2d8a6f"/>
+        <text x="430" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">Privesc Agent</text>
+        <text x="430" y="127" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">权限提升</text>
+
+        <rect x="520" y="90" width="140" height="48" rx="6" fill="#2d8a6f"/>
+        <text x="590" y="110" text-anchor="middle" font-size="13" font-weight="600" fill="#fff">XSS Agent</text>
+        <text x="590" y="127" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">跨站脚本测试</text>
+
+        <!-- Connector lines -->
+        <line x1="110" y1="80" x2="110" y2="90" stroke="#ccc"/>
+        <line x1="270" y1="80" x2="270" y2="90" stroke="#ccc"/>
+        <line x1="430" y1="80" x2="430" y2="90" stroke="#ccc"/>
+        <line x1="590" y1="80" x2="590" y2="90" stroke="#ccc"/>
+
+        <!-- Arrows down -->
+        <line x1="110" y1="138" x2="110" y2="170" stroke="#ccc" marker-end="url(#arrow)"/>
+        <line x1="270" y1="138" x2="270" y2="170" stroke="#ccc"/>
+        <line x1="430" y1="138" x2="430" y2="170" stroke="#ccc"/>
+        <line x1="590" y1="138" x2="590" y2="170" stroke="#ccc"/>
+
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#ccc"/>
+          </marker>
+        </defs>
+
+        <!-- Docker sandbox -->
+        <rect x="100" y="170" width="520" height="50" rx="8" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="360" y="192" text-anchor="middle" font-size="13" font-weight="600" fill="#1a5c4a">🐳 Docker 安全沙箱</text>
+        <text x="360" y="210" text-anchor="middle" font-size="11" fill="#555">隔离执行环境 · 结果回传 · PoC 验证</text>
+
+        <!-- Features -->
+        <rect x="100" y="240" width="120" height="30" rx="15" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="160" y="259" text-anchor="middle" font-size="11" fill="#1a7a1a">✅ OWASP 覆盖</text>
+        <rect x="230" y="240" width="120" height="30" rx="15" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="290" y="259" text-anchor="middle" font-size="11" fill="#1a7a1a">✅ PoC 生成</text>
+        <rect x="360" y="240" width="120" height="30" rx="15" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="420" y="259" text-anchor="middle" font-size="11" fill="#1a7a1a">✅ CI/CD 集成</text>
+        <rect x="490" y="240" width="120" height="30" rx="15" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="550" y="259" text-anchor="middle" font-size="11" fill="#1a7a1a">✅ Apache 2.0</text>
+      </svg>
+      <div class="caption">图 4：Strix 多智能体架构</div>
+    </div>
+
+    <h3 id="s22">2.2 BugTrace-AI</h3>
+    <p><strong>BugTrace-AI</strong> 是一个融合 SAST + DAST 的开源 AI Web 安全分析套件，通过多轮递归 AI Prompt 角色扮演实现深度分析。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 300" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="160" height="36" rx="5" fill="#1a5c4a"/>
+        <text x="90" y="44" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">WebSec Agent</text>
+
+        <rect x="180" y="20" width="160" height="36" rx="5" fill="#1a5c4a"/>
+        <text x="260" y="44" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">URL Analysis</text>
+
+        <rect x="350" y="20" width="160" height="36" rx="5" fill="#1a5c4a"/>
+        <text x="430" y="44" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">Code Analysis</text>
+
+        <rect x="520" y="20" width="160" height="36" rx="5" fill="#1a5c4a"/>
+        <text x="600" y="44" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">DOM XSS Tracer</text>
+
+        <rect x="10" y="75" width="160" height="36" rx="5" fill="#2d8a6f"/>
+        <text x="90" y="99" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">JWT Auditor</text>
+
+        <rect x="180" y="75" width="160" height="36" rx="5" fill="#2d8a6f"/>
+        <text x="260" y="99" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">Privesc Finder</text>
+
+        <rect x="350" y="75" width="160" height="36" rx="5" fill="#2d8a6f"/>
+        <text x="430" y="99" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">Payload Forge</text>
+
+        <rect x="520" y="75" width="160" height="36" rx="5" fill="#2d8a6f"/>
+        <text x="600" y="99" text-anchor="middle" font-size="11" font-weight="600" fill="#fff">SSTI Forge</text>
+
+        <!-- Methodology arrow -->
+        <rect x="180" y="140" width="360" height="40" rx="20" fill="#e8b84b" opacity=".9"/>
+        <text x="360" y="165" text-anchor="middle" font-size="13" font-weight="700" fill="#333">Recurse → Consolidate → Refine</text>
+        <text x="360" y="195" text-anchor="middle" font-size="11" fill="#888">多轮 AI Prompt 角色扮演 · 聚合交叉验证 · 去误报精炼</text>
+      </svg>
+      <div class="caption">图 5：BugTrace-AI 工具套件与方法论</div>
+    </div>
+
+    <h3 id="s23">2.3 DarkMoon（Web 模块）</h3>
+    <p><strong>DarkMoon</strong> 是一个全面的自主 AI 渗透测试引擎，其核心创新在于 <strong>技术栈感知的子代理调度</strong>。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+        <!-- Target -->
+        <rect x="250" y="10" width="200" height="40" rx="6" fill="#e8b84b"/>
+        <text x="350" y="36" text-anchor="middle" font-size="14" font-weight="700" fill="#333">🌐 目标 Web 应用</text>
+
+        <line x1="350" y1="50" x2="350" y2="70" stroke="#ccc" marker-end="url(#arrow)"/>
+
+        <!-- Fingerprint -->
+        <rect x="200" y="70" width="300" height="36" rx="6" fill="#1a5c4a"/>
+        <text x="350" y="93" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">技术栈指纹识别</text>
+        <text x="350" y="113" text-anchor="middle" font-size="10" fill="#888">Wappalyzer / HTTP 头分析 / 页面特征</text>
+
+        <line x1="350" y1="106" x2="350" y2="130" stroke="#ccc"/>
+
+        <!-- Dynamic selection -->
+        <rect x="150" y="130" width="400" height="36" rx="6" fill="#2d8a6f"/>
+        <text x="350" y="153" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">🎯 动态子代理选择 (技术栈感知)</text>
+
+        <!-- Agents -->
+        <path d="M200,166 L200,190" stroke="#ccc"/>
+        <path d="M290,166 L290,190" stroke="#ccc"/>
+        <path d="M350,166 L350,190" stroke="#ccc"/>
+        <path d="M430,166 L430,190" stroke="#ccc"/>
+        <path d="M510,166 L510,190" stroke="#ccc"/>
+
+        <rect x="140" y="190" width="120" height="40" rx="5" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1.5"/>
+        <text x="200" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">WordPress</text>
+        <text x="200" y="224" text-anchor="middle" font-size="9" fill="#888">WPScan 代理</text>
+
+        <rect x="270" y="190" width="100" height="40" rx="5" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1.5"/>
+        <text x="320" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">GraphQL</text>
+        <text x="320" y="224" text-anchor="middle" font-size="9" fill="#888">GraphQL 代理</text>
+
+        <rect x="380" y="190" width="100" height="40" rx="5" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1.5"/>
+        <text x="430" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">REST API</text>
+        <text x="430" y="224" text-anchor="middle" font-size="9" fill="#888">API 测试代理</text>
+
+        <rect x="490" y="190" width="100" height="40" rx="5" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1.5"/>
+        <text x="540" y="210" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">通用</text>
+        <text x="540" y="224" text-anchor="middle" font-size="9" fill="#888">标准 Web 代理</text>
+
+        <line x1="200" y1="230" x2="200" y2="260" stroke="#ccc"/>
+        <line x1="320" y1="230" x2="320" y2="260" stroke="#ccc"/>
+        <line x1="430" y1="230" x2="430" y2="260" stroke="#ccc"/>
+        <line x1="540" y1="230" x2="540" y2="260" stroke="#ccc"/>
+
+        <!-- MCP Layer -->
+        <rect x="100" y="260" width="500" height="36" rx="6" fill="#0e3d31"/>
+        <text x="350" y="283" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">🔒 MCP 安全接口层</text>
+
+        <!-- Tools -->
+        <rect x="130" y="315" width="90" height="30" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="175" y="335" text-anchor="middle" font-size="10" fill="#1a7a1a">Nuclei</text>
+        <rect x="230" y="315" width="90" height="30" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="275" y="335" text-anchor="middle" font-size="10" fill="#1a7a1a">sqlmap</text>
+        <rect x="330" y="315" width="90" height="30" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="375" y="335" text-anchor="middle" font-size="10" fill="#1a7a1a">ffuf</text>
+        <rect x="430" y="315" width="90" height="30" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="475" y="335" text-anchor="middle" font-size="10" fill="#1a7a1a">httpx</text>
+        <rect x="530" y="315" width="60" height="30" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="560" y="335" text-anchor="middle" font-size="10" fill="#1a7a1a">50+</text>
+      </svg>
+      <div class="caption">图 6：DarkMoon 动态子代理选择机制</div>
+    </div>
+
+    <h3 id="s26">2.4 Web 工具综合对比</h3>
+
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>维度</th><th>Strix</th><th>BugTrace-AI</th><th>DarkMoon</th><th>H-Pentest</th><th>MAPTA</th></tr>
+      <tr><td><strong>架构模式</strong></td><td>多代理编排</td><td>工具集</td><td>动态子代理</td><td>双模式</td><td>分布式多代理</td></tr>
+      <tr><td><strong>OWASP 覆盖</strong></td><td>全面</td><td>全面</td><td>全面</td><td>Top 10</td><td>SSRF/SQLi/SSTI</td></tr>
+      <tr><td><strong>PoC 生成</strong></td><td>✅</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td></tr>
+      <tr><td><strong>单次成本</strong></td><td>中</td><td>高</td><td>中</td><td>高</td><td>$0.07</td></tr>
+      <tr><td><strong>部署</strong></td><td>中</td><td>低</td><td>中</td><td>中</td><td>学术</td></tr>
+      <tr><td><strong>适合场景</strong></td><td>通用 Web</td><td>深度分析</td><td>技术栈定向</td><td>CTF/竞赛</td><td>学术验证</td></tr>
+    </table>
+    </div>
+
+    <!-- ===================== CHAPTER 3 ===================== -->
+    <h2 id="ch3">三、基础设施渗透测试工具深度分析</h2>
+
+    <h3 id="s31">3.1 CyberStrike</h3>
+    <p><strong>CyberStrike</strong>（AGPL-3.0）是目前功能最全面的 AI 驱动攻防安全代理，拥有 <strong>7,300+ 攻击技能</strong> 和 13+ 专业代理，支持 15+ LLM 提供商。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 380" xmlns="http://www.w3.org/2000/svg">
+        <!-- LLM Layer -->
+        <rect x="60" y="10" width="600" height="44" rx="6" fill="#0e3d31"/>
+        <text x="360" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">CyberStrike Architecture</text>
+
+        <!-- LLM providers -->
+        <rect x="40" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="70" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">GPT-4o</text>
+        <rect x="110" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="140" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">Claude</text>
+        <rect x="180" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="210" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">Gemini</text>
+        <rect x="250" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="280" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">DeepSeek</text>
+        <rect x="320" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="350" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">Qwen</text>
+        <rect x="390" y="70" width="60" height="24" rx="12" fill="#e6f0fa"/>
+        <text x="420" y="86" text-anchor="middle" font-size="10" fill="#1a5c9a">Ollama</text>
+        <text x="500" y="86" font-size="10" fill="#888">+ 15+ providers</text>
+
+        <line x1="360" y1="94" x2="360" y2="110" stroke="#ccc"/>
+
+        <!-- Agent Layer -->
+        <rect x="40" y="110" width="640" height="30" rx="5" fill="#2d8a6f"/>
+        <text x="360" y="130" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">13+ 专业代理层</text>
+        <text x="360" y="148" text-anchor="middle" font-size="10" fill="#888">Web · Mobile · Cloud · Internal · Wi-Fi · AD · K8s · IoT · API · 容器</text>
+
+        <line x1="360" y1="155" x2="360" y2="170" stroke="#ccc"/>
+
+        <!-- MCP Layer -->
+        <rect x="40" y="170" width="640" height="30" rx="5" fill="#1a5c4a"/>
+        <text x="360" y="190" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">🔌 MCP 生态层 — 176+ 安全工具</text>
+
+        <line x1="360" y1="200" x2="360" y2="215" stroke="#ccc"/>
+
+        <!-- Knowledge Layer -->
+        <rect x="40" y="215" width="640" height="30" rx="5" fill="#0e3d31"/>
+        <text x="360" y="235" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">📚 知识层</text>
+
+        <rect x="60" y="260" width="180" height="24" rx="4" fill="#e8b84b" opacity=".85"/>
+        <text x="150" y="277" text-anchor="middle" font-size="10" font-weight="600" fill="#333">7,300+ MITRE 技能</text>
+        <rect x="260" y="260" width="180" height="24" rx="4" fill="#e8b84b" opacity=".85"/>
+        <text x="350" y="277" text-anchor="middle" font-size="10" font-weight="600" fill="#333">120+ OWASP 用例</text>
+        <rect x="460" y="260" width="200" height="24" rx="4" fill="#e8b84b" opacity=".85"/>
+        <text x="560" y="277" text-anchor="middle" font-size="10" font-weight="600" fill="#333">Neo4j 知识图谱</text>
+
+        <!-- Web UI -->
+        <rect x="260" y="300" width="200" height="28" rx="14" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1.5"/>
+        <text x="360" y="319" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7a1a">🌐 Web UI + Cloudflare Tunnel</text>
+      </svg>
+      <div class="caption">图 7：CyberStrike 架构总览</div>
+    </div>
+
+    <h3 id="s32">3.2 PentAGI</h3>
+    <p><strong>PentAGI</strong>（8,200+ GitHub Stars, MIT）采用四智能体协作架构，是目前最成熟的学术级 AI 渗透框架。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- Orchestrator -->
+        <rect x="260" y="10" width="200" height="44" rx="22" fill="#1a5c4a"/>
+        <text x="360" y="38" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Orchestrator</text>
+        <text x="360" y="62" text-anchor="middle" font-size="10" fill="#888">任务规划 · 代理调度 · 结果汇聚</text>
+
+        <!-- Lines to agents -->
+        <line x1="310" y1="54" x2="140" y2="90" stroke="#ccc"/>
+        <line x1="360" y1="54" x2="360" y2="90" stroke="#ccc"/>
+        <line x1="410" y1="54" x2="580" y2="90" stroke="#ccc"/>
+
+        <!-- Agents -->
+        <rect x="50" y="90" width="180" height="54" rx="8" fill="#2d8a6f"/>
+        <text x="140" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">🔍 Researcher</text>
+        <text x="140" y="132" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">信息收集 · 侦察分析</text>
+
+        <rect x="270" y="90" width="180" height="54" rx="8" fill="#2d8a6f"/>
+        <text x="360" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">⚙️ Developer</text>
+        <text x="360" y="132" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">攻击策略 · 载荷生成</text>
+
+        <rect x="490" y="90" width="180" height="54" rx="8" fill="#2d8a6f"/>
+        <text x="580" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">🚀 Executor</text>
+        <text x="580" y="132" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.8)">命令执行 · 工具调用</text>
+
+        <!-- Layer arrows -->
+        <line x1="140" y1="144" x2="140" y2="175" stroke="#ccc"/>
+        <line x1="360" y1="144" x2="360" y2="175" stroke="#ccc"/>
+        <line x1="580" y1="144" x2="580" y2="175" stroke="#ccc"/>
+
+        <!-- Docker Sandbox -->
+        <rect x="100" y="175" width="520" height="44" rx="8" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5" stroke-dasharray="6,3"/>
+        <text x="360" y="196" text-anchor="middle" font-size="12" font-weight="600" fill="#1a5c4a">🐳 Docker 沙箱 — Kali Linux + 20+ 工具</text>
+        <text x="360" y="212" text-anchor="middle" font-size="10" fill="#555">nmap · Metasploit · sqlmap · hydra · gobuster · ...</text>
+
+        <!-- Memory layers -->
+        <rect x="60" y="240" width="600" height="30" rx="5" fill="#0e3d31"/>
+        <text x="360" y="260" text-anchor="middle" font-size="12" font-weight="600" fill="#fff">三层记忆系统</text>
+
+        <rect x="70" y="285" width="180" height="40" rx="5" fill="#e8b84b" opacity=".85"/>
+        <text x="160" y="302" text-anchor="middle" font-size="11" font-weight="700" fill="#333">长期记忆</text>
+        <text x="160" y="318" text-anchor="middle" font-size="9" fill="#555">pgvector + PostgreSQL</text>
+
+        <rect x="270" y="285" width="180" height="40" rx="5" fill="#e8b84b" opacity=".85"/>
+        <text x="360" y="302" text-anchor="middle" font-size="11" font-weight="700" fill="#333">工作记忆</text>
+        <text x="360" y="318" text-anchor="middle" font-size="9" fill="#555">当前任务会话窗口</text>
+
+        <rect x="470" y="285" width="180" height="40" rx="5" fill="#e8b84b" opacity=".85"/>
+        <text x="560" y="302" text-anchor="middle" font-size="11" font-weight="700" fill="#333">历史记忆</text>
+        <text x="560" y="318" text-anchor="middle" font-size="9" fill="#555">操作日志追溯</text>
+
+        <!-- API -->
+        <rect x="240" y="345" width="240" height="28" rx="14" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1.5"/>
+        <text x="360" y="364" text-anchor="middle" font-size="11" font-weight="600" fill="#1a7a1a">🔌 REST API + GraphQL + OpenTelemetry</text>
+      </svg>
+      <div class="caption">图 8：PentAGI 四智能体协作架构与三层记忆系统</div>
+    </div>
+
+    <h3 id="s33">3.3 Zen-AI-Pentest</h3>
+    <p>采用简洁的四阶段流水线架构，通过多模型投票机制降低误报率，适合 DevSecOps 集成。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 740 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Stage 1 -->
+        <rect x="10" y="30" width="160" height="50" rx="8" fill="#1a5c4a"/>
+        <text x="90" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">侦察阶段</text>
+        <text x="90" y="70" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Nmap · Amass · Shodan</text>
+
+        <!-- Arrow 1 -->
+        <path d="M170,55 L200,55" stroke="#2d8a6f" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="185" y="48" text-anchor="middle" font-size="9" fill="#2d8a6f">风险引擎</text>
+
+        <!-- Stage 2 -->
+        <rect x="210" y="30" width="160" height="50" rx="8" fill="#2d8a6f"/>
+        <text x="290" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">漏洞扫描</text>
+        <text x="290" y="70" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Nuclei · sqlmap · Nikto</text>
+
+        <!-- Arrow 2 -->
+        <path d="M370,55 L400,55" stroke="#1a5c4a" stroke-width="3" marker-end="url(#arrow)"/>
+        <text x="385" y="48" text-anchor="middle" font-size="9" fill="#1a5c4a">多模型投票</text>
+
+        <!-- Stage 3 -->
+        <rect x="410" y="30" width="160" height="50" rx="8" fill="#2d8a6f"/>
+        <text x="490" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">利用阶段</text>
+        <text x="490" y="70" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">Metasploit · 自定义</text>
+
+        <!-- Arrow 3 -->
+        <path d="M570,55 L600,55" stroke="#2d8a6f" stroke-width="3" marker-end="url(#arrow)"/>
+
+        <!-- Stage 4 -->
+        <rect x="610" y="30" width="120" height="50" rx="8" fill="#1a5c4a"/>
+        <text x="670" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">报告阶段</text>
+        <text x="670" y="70" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">SARIF · PDF</text>
+
+        <!-- Risk engine detail -->
+        <rect x="80" y="110" width="260" height="28" rx="14" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="210" y="129" text-anchor="middle" font-size="11" fill="#1a5c4a">⚡ 风险引擎: CVSS + EPSS 双重评级</text>
+
+        <rect x="380" y="110" width="280" height="28" rx="14" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="520" y="129" text-anchor="middle" font-size="11" fill="#1a5c4a">🤖 多模型投票: 多个 LLM 独立判定去误报</text>
+
+        <rect x="160" y="155" width="420" height="28" rx="14" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1.5"/>
+        <text x="370" y="174" text-anchor="middle" font-size="11" fill="#1a7a1a">🔗 CI/CD: GitHub Actions · GitLab CI · Jenkins | 告警: Slack · Email</text>
+      </svg>
+      <div class="caption">图 9：Zen-AI-Pentest 四阶段流水线架构</div>
+    </div>
+
+    <h3 id="s36">3.4 基础设施工具综合对比</h3>
+
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>维度</th><th>CyberStrike</th><th>PentAGI</th><th>Zen-AI</th><th>DarkMoon</th><th>Asgard</th></tr>
+      <tr><td><strong>架构</strong></td><td>13+ 多代理</td><td>四智能体</td><td>四流水线</td><td>动态子代理</td><td>10 模块</td></tr>
+      <tr><td><strong>知识图谱</strong></td><td>Neo4j</td><td>Neo4j</td><td>❌</td><td>❌</td><td>❌</td></tr>
+      <tr><td><strong>离线能力</strong></td><td>✅</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr>
+      <tr><td><strong>Web UI</strong></td><td>✅</td><td>❌</td><td>❌</td><td>❌</td><td>❌</td></tr>
+      <tr><td><strong>AD 支持</strong></td><td>✅</td><td>✅</td><td>❌</td><td>✅</td><td>❌</td></tr>
+      <tr><td><strong>K8s 支持</strong></td><td>✅</td><td>❌</td><td>❌</td><td>✅</td><td>❌</td></tr>
+      <tr><td><strong>适合场景</strong></td><td>全栈红队</td><td>复杂攻击链</td><td>DevSecOps</td><td>多域综合</td><td>模块化安全</td></tr>
+    </table>
+    </div>
+
+    <!-- ===================== CHAPTER 4 ===================== -->
+    <h2 id="ch4">四、AI 模型专项测试工具分析</h2>
+
+    <p>AI 模型专项测试工具专注于评估 LLM 本身的安全性，包括提示注入、越狱、数据泄露等 AI 特有攻击面。</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>🛡️ Garak (NVIDIA)</h4>
+        <p><span class="tag tag-blue">Apache 2.0</span> 100+ 攻击模块，LLM 漏洞扫描标配工具，支持 CI/CD 集成。</p>
+      </div>
+      <div class="card">
+        <h4>🔬 DeepTeam</h4>
+        <p><span class="tag tag-green">开源</span> 40+ 漏洞类型，LLM-as-Simulator + LLM-as-Evaluator 双模式，5 行代码扩展。</p>
+      </div>
+      <div class="card">
+        <h4>🎭 ARTKIT (IBM)</h4>
+        <p><span class="tag tag-purple">开源</span> 多轮 attacker-target 对抗模拟，支持人机协同。</p>
+      </div>
+      <div class="card">
+        <h4>📊 SecEval (Stanford)</h4>
+        <p><span class="tag tag-orange">学术</span> 学术级安全评估数据集和基准测试框架。</p>
+      </div>
+    </div>
+
+    <!-- ===================== CHAPTER 5 ===================== -->
+    <h2 id="ch5">五、架构模式与智能体协作深度对比</h2>
+
+    <h3>5.1 三大架构模式</h3>
+
+    <div class="fig">
+      <svg viewBox="0 0 740 420" xmlns="http://www.w3.org/2000/svg">
+        <!-- Pattern 1: Orchestrator-Worker -->
+        <rect x="10" y="10" width="240" height="48" rx="6" fill="#1a5c4a"/>
+        <text x="130" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">模式一：编排式多智能体</text>
+        <text x="130" y="42" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">PentAGI · DarkMoon · CyberStrike</text>
+
+        <rect x="70" y="70" width="120" height="28" rx="14" fill="#e8b84b"/>
+        <text x="130" y="89" text-anchor="middle" font-size="11" font-weight="600" fill="#333">Orchestrator</text>
+
+        <line x1="130" y1="98" x2="60" y2="125" stroke="#ccc"/>
+        <line x1="130" y1="98" x2="130" y2="125" stroke="#ccc"/>
+        <line x1="130" y1="98" x2="200" y2="125" stroke="#ccc"/>
+
+        <rect x="30" y="125" width="60" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="60" y="142" text-anchor="middle" font-size="9" fill="#fff">Worker</text>
+        <rect x="100" y="125" width="60" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="130" y="142" text-anchor="middle" font-size="9" fill="#fff">Worker</text>
+        <rect x="170" y="125" width="60" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="200" y="142" text-anchor="middle" font-size="9" fill="#fff">Worker</text>
+
+        <rect x="30" y="165" width="200" height="24" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1" stroke-dasharray="4,2"/>
+        <text x="130" y="182" text-anchor="middle" font-size="9" fill="#1a5c4a">工具 / 沙箱执行层</text>
+
+        <text x="130" y="210" text-anchor="middle" font-size="9" fill="#555">✅ 分工明确 · 可扩展 · 适合复杂攻击链</text>
+        <text x="130" y="224" text-anchor="middle" font-size="9" fill="#888">❌ 编排器瓶颈 · 通信开销</text>
+
+        <!-- Pattern 2: Pipeline -->
+        <rect x="250" y="10" width="240" height="48" rx="6" fill="#2d8a6f"/>
+        <text x="370" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">模式二：流水线式</text>
+        <text x="370" y="42" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">Zen-AI · MAPTA</text>
+
+        <rect x="270" y="75" width="40" height="24" rx="4" fill="#1a5c4a"/>
+        <text x="290" y="91" text-anchor="middle" font-size="8" fill="#fff">S1</text>
+        <path d="M310,87 L320,87" stroke="#1a5c4a" stroke-width="2"/>
+        <rect x="320" y="75" width="40" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="340" y="91" text-anchor="middle" font-size="8" fill="#fff">S2</text>
+        <path d="M360,87 L370,87" stroke="#2d8a6f" stroke-width="2"/>
+        <rect x="370" y="75" width="40" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="390" y="91" text-anchor="middle" font-size="8" fill="#fff">S3</text>
+        <path d="M410,87 L420,87" stroke="#2d8a6f" stroke-width="2"/>
+        <rect x="420" y="75" width="40" height="24" rx="4" fill="#1a5c4a"/>
+        <text x="440" y="91" text-anchor="middle" font-size="8" fill="#fff">S4</text>
+
+        <text x="370" y="130" text-anchor="middle" font-size="9" fill="#555">✅ 简单直观 · 确定性高 · 易扩展</text>
+        <text x="370" y="144" text-anchor="middle" font-size="9" fill="#888">❌ 灵活性差 · 无法动态调整</text>
+
+        <!-- Pattern 3: Decentralized -->
+        <rect x="490" y="10" width="240" height="48" rx="6" fill="#0e3d31"/>
+        <text x="610" y="24" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">模式三：去中心化</text>
+        <text x="610" y="42" text-anchor="middle" font-size="9" fill="rgba(255,255,255,.7)">CAI · 学术探索</text>
+
+        <circle cx="560" cy="95" r="20" fill="#2d8a6f"/>
+        <text x="560" y="100" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">A</text>
+        <circle cx="620" cy="75" r="20" fill="#2d8a6f"/>
+        <text x="620" y="80" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">B</text>
+        <circle cx="640" cy="120" r="20" fill="#2d8a6f"/>
+        <text x="640" y="125" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">C</text>
+        <circle cx="580" cy="130" r="20" fill="#2d8a6f"/>
+        <text x="580" y="135" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">D</text>
+
+        <line x1="576" y1="82" x2="604" y2="78" stroke="#e8b84b" stroke-width="2"/>
+        <line x1="576" y1="108" x2="624" y2="116" stroke="#e8b84b" stroke-width="2"/>
+        <line x1="596" y1="125" x2="622" y2="122" stroke="#e8b84b" stroke-width="2"/>
+        <line x1="554" y1="110" x2="570" y2="126" stroke="#e8b84b" stroke-width="2"/>
+
+        <text x="610" y="178" text-anchor="middle" font-size="9" fill="#555">✅ 弹性最好 · 无单点故障</text>
+        <text x="610" y="192" text-anchor="middle" font-size="9" fill="#888">❌ 协调复杂 · 结果不可预测</text>
+
+        <!-- Recommendation -->
+        <rect x="130" y="250" width="480" height="36" rx="18" fill="#e8b84b" opacity=".9"/>
+        <text x="370" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#333">推荐：通用渗透 → 编排式 ｜ DevSecOps → 流水线 ｜ 探索 → 去中心化</text>
+      </svg>
+      <div class="caption">图 10：三大智能体协作架构模式对比</div>
+    </div>
+
+    <h3>5.2 关键技术决策对比</h3>
+
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>技术决策</th><th>方案</th><th>代表工具</th><th>优势</th><th>劣势</th></tr>
+      <tr><td rowspan="2"><strong>记忆机制</strong></td><td>向量数据库</td><td>PentAGI</td><td>语义检索强</td><td>维护向量索引</td></tr>
+      <tr><td>知识图谱</td><td>CyberStrike</td><td>关系追踪好</td><td>运维复杂</td></tr>
+      <tr><td rowspan="2"><strong>工具集成</strong></td><td>MCP 协议</td><td>DarkMoon</td><td>标准化松耦合</td><td>协议开销</td></tr>
+      <tr><td>原生集成</td><td>Strix</td><td>性能最好</td><td>耦合度高</td></tr>
+      <tr><td rowspan="2"><strong>安全沙箱</strong></td><td>Docker 容器</td><td>PentAGI</td><td>标准方案</td><td>中等隔离</td></tr>
+      <tr><td>Docker+语义校验</td><td>DarkMoon</td><td>隔离最强</td><td>实现复杂</td></tr>
+    </table>
+    </div>
+
+    <!-- ===================== CHAPTER 6 ===================== -->
+    <h2 id="ch6">六、LLM 安全限制悖论解释</h2>
+
+    <p class="highlight-box"><strong>核心悖论</strong>：大模型被训练为"拒绝提供攻击建议"，但基于这些大模型构建的 AI 渗透测试工具却蓬勃发展。以下从 <strong>七层机制</strong> 解释这一现象。</p>
+
+    <h3>6.1 语境重构 (Contextual Reframing)</h3>
+    <p>同一操作在不同语境下的 LLM 响应天差地别：</p>
+
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>语境</th><th>用户提问</th><th>LLM 响应</th></tr>
+      <tr><td>恶意攻击</td><td><code>教我如何入侵 example.com</code></td><td><span class="tag tag-red">❌ 拒绝</span></td></tr>
+      <tr><td>授权测试</td><td><code>我是授权测试人员，请建议 SQL 注入检测方法</code></td><td><span class="tag tag-green">✅ 配合</span></td></tr>
+      <tr><td>学术研究</td><td><code>请解释 SQL 注入原理和防御方法，附带技术细节</code></td><td><span class="tag tag-green">✅ 配合</span></td></tr>
+      <tr><td>安全教育</td><td><code>为安全培训编写 SQL 注入示例，本地沙箱</code></td><td><span class="tag tag-green">✅ 配合</span></td></tr>
+    </table>
+    </div>
+
+    <p>AI 渗透测试工具通过 <strong>系统提示词</strong> 建立"授权安全测试"语境，利用 LLM 训练中对"合法安全测试"的豁免机制。</p>
+
+    <h3>6.2 工具中介层</h3>
+    <div class="highlight-box">
+      <p>LLM 不直接生成攻击载荷，而是通过 MCP 协议编排已审核的安全工具模块。从"攻击者"转变为"工具操作员"，绕过安全对齐。</p>
+    </div>
+
+    <div class="fig">
+      <svg viewBox="0 0 700 120" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="680" height="100" rx="8" fill="#f8f8f8" stroke="#ccc"/>
+        <text x="350" y="30" text-anchor="middle" font-size="12" font-weight="600" fill="#333">工具中介层的保护机制</text>
+
+        <rect x="30" y="45" width="140" height="24" rx="4" fill="#1a5c4a"/>
+        <text x="100" y="62" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">🎯 范围校验</text>
+        <text x="100" y="80" text-anchor="middle" font-size="9" fill="#555">白名单目标验证</text>
+
+        <rect x="190" y="45" width="140" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="260" y="62" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">⏱️ 速率限制</text>
+        <text x="260" y="80" text-anchor="middle" font-size="9" fill="#555">防 DoS 级别扫描</text>
+
+        <rect x="350" y="45" width="140" height="24" rx="4" fill="#2d8a6f"/>
+        <text x="420" y="62" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">📝 审计日志</text>
+        <text x="420" y="80" text-anchor="middle" font-size="9" fill="#555">操作全量可追溯</text>
+
+        <rect x="510" y="45" width="140" height="24" rx="4" fill="#1a5c4a"/>
+        <text x="580" y="62" text-anchor="middle" font-size="10" font-weight="600" fill="#fff">🔒 沙箱隔离</text>
+        <text x="580" y="80" text-anchor="middle" font-size="9" fill="#555">Docker 安全容器</text>
+      </svg>
+      <div class="caption">图 11：工具中介层的四重安全保护机制</div>
+    </div>
+
+    <h3>6.3 任务分解与无害化</h3>
+    <p>一个整体上属于"攻击"的行为，通过多智能体架构被分解为一系列单独看都是正常安全测试操作的子任务。</p>
+
+    <div class="fig">
+      <svg viewBox="0 0 700 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="680" height="32" rx="5" fill="#e8b84b" opacity=".85"/>
+        <text x="350" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="#333">原始任务: "检测 example.com 的 SQL 注入漏洞"</text>
+
+        <path d="M350,42 L350,55" stroke="#ccc"/>
+
+        <rect x="30" y="55" width="200" height="28" rx="4" fill="#1a5c4a"/>
+        <text x="130" y="74" text-anchor="middle" font-size="10" fill="#fff">子任务: 端口扫描 → 正常网络管理</text>
+        <rect x="250" y="55" width="200" height="28" rx="4" fill="#2d8a6f"/>
+        <text x="350" y="74" text-anchor="middle" font-size="10" fill="#fff">子任务: 服务识别 → 资产管理</text>
+        <rect x="470" y="55" width="200" height="28" rx="4" fill="#2d8a6f"/>
+        <text x="570" y="74" text-anchor="middle" font-size="10" fill="#fff">子任务: 端点爬取 → Web 爬虫</text>
+        <rect x="130" y="95" width="200" height="28" rx="4" fill="#2d8a6f"/>
+        <text x="230" y="114" text-anchor="middle" font-size="10" fill="#fff">子任务: 参数测试 → 安全测试标准</text>
+        <rect x="350" y="95" width="200" height="28" rx="4" fill="#2d8a6f"/>
+        <text x="450" y="114" text-anchor="middle" font-size="10" fill="#fff">子任务: 差异分析 → 数据分析行为</text>
+
+        <rect x="130" y="145" width="440" height="28" rx="14" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="350" y="164" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">🔍 每个子任务单独看都是正常操作，LLM 安全过滤器无法识别整体攻击意图</text>
+      </svg>
+      <div class="caption">图 12：任务分解使攻击意图对 LLM 不可见</div>
+    </div>
+
+    <h3>6.4-6.7 四层附加机制</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>开源模型与领域微调</h4>
+        <p>开源 LLM（Qwen、DeepSeek）不受商业 API 政策约束。通过渗透测试数据集领域微调，消除拒绝回答倾向。xOffense 基于 Qwen3-32B 微调达到 79% 任务完成率。</p>
+      </div>
+      <div class="card">
+        <h4>RAG 知识增强</h4>
+        <p>LLM 角色从"生成攻击知识"转变为"检索已有知识"。检索 PayloadsAllTheThings 等公开库不触发安全对齐，"生成 vs 检索"的法律含义不同。</p>
+      </div>
+      <div class="card">
+        <h4>安全包装机制</h4>
+        <p>框架内置 Docker 沙箱、目标范围验证、执行审计日志、PoC 验证隔离、速率限制等，使 LLM 判定为"合法的受控安全测试"。</p>
+      </div>
+      <div class="card">
+        <h4>双刃剑本质</h4>
+        <p>同样的机制被攻击者利用：Villager 发布 2 个月下载 11,000 次、CyberStrike 37 天被武器化。防御者需提升评估频率，以 AI 对抗 AI。</p>
+      </div>
+    </div>
+
+    <div class="highlight-box">
+      <h4>结论</h4>
+      <p>AI 渗透测试工具能在 LLM 安全限制下运作，不是因为安全对齐"失效"，而是因为：安全对齐针对意图而非行为（语境重构）；工具中介将 LLM 从"实施者"变为"协调者"；分解使攻击意图不可见；开源模型不受 API 政策约束。这些是安全测试合理需求与 LLM 能力边界之间的自然交汇点。</p>
+    </div>
+
+    <!-- ===================== CHAPTER 7 ===================== -->
+    <h2 id="ch7">七、自研技术路线与研发建议</h2>
+
+    <h3>7.1 核心技术选择决策树</h3>
+
+    <div class="fig">
+      <svg viewBox="0 0 740 460" xmlns="http://www.w3.org/2000/svg">
+        <!-- Root -->
+        <rect x="270" y="10" width="200" height="36" rx="18" fill="#1a5c4a"/>
+        <text x="370" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">自研 AI 渗透平台</text>
+
+        <!-- LLM -->
+        <line x1="370" y1="46" x2="370" y2="70" stroke="#ccc"/>
+        <rect x="220" y="70" width="300" height="36" rx="5" fill="#e8b84b" opacity=".9"/>
+        <text x="370" y="93" text-anchor="middle" font-size="12" font-weight="700" fill="#333">1. LLM 选型</text>
+
+        <path d="M280,106 L280,125 L220,125 L220,135" stroke="#ccc" fill="none"/>
+        <rect x="140" y="135" width="160" height="44" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="220" y="155" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">商业 API 优先</text>
+        <text x="220" y="170" text-anchor="middle" font-size="9" fill="#555">GPT-4o / Claude / Gemini</text>
+
+        <path d="M370,106 L370,125 L300,125 L300,135" stroke="#ccc" fill="none"/>
+        <rect x="300" y="135" width="140" height="44" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="370" y="155" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">开源在线</text>
+        <text x="370" y="170" text-anchor="middle" font-size="9" fill="#555">DeepSeek / Qwen</text>
+
+        <path d="M460,106 L460,125 L520,125 L520,135" stroke="#ccc" fill="none"/>
+        <rect x="440" y="135" width="160" height="44" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="520" y="155" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">本地部署</text>
+        <text x="520" y="170" text-anchor="middle" font-size="9" fill="#555">Ollama 生态</text>
+
+        <!-- Architecture -->
+        <line x1="370" y1="190" x2="370" y2="210" stroke="#ccc"/>
+        <rect x="220" y="210" width="300" height="36" rx="5" fill="#e8b84b" opacity=".9"/>
+        <text x="370" y="233" text-anchor="middle" font-size="12" font-weight="700" fill="#333">2. 架构模式 ★ 推荐编排式</text>
+
+        <path d="M280,246 L280,265 L220,265 L220,275" stroke="#ccc" fill="none"/>
+        <rect x="140" y="275" width="160" height="44" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="2"/>
+        <text x="220" y="295" text-anchor="middle" font-size="10" font-weight="700" fill="#1a7a1a">★ 编排式多智能体</text>
+        <text x="220" y="310" text-anchor="middle" font-size="9" fill="#555">Orchestrator + Worker</text>
+
+        <path d="M370,246 L370,275" stroke="#ccc" fill="none"/>
+        <rect x="300" y="275" width="140" height="44" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="370" y="295" text-anchor="middle" font-size="10" font-weight="600" fill="#1a5c4a">流水线式</text>
+        <text x="370" y="310" text-anchor="middle" font-size="9" fill="#555">简单可靠</text>
+
+        <!-- Tool Integration -->
+        <line x1="370" y1="330" x2="370" y2="350" stroke="#ccc"/>
+        <rect x="220" y="350" width="300" height="36" rx="5" fill="#e8b84b" opacity=".9"/>
+        <text x="370" y="373" text-anchor="middle" font-size="12" font-weight="700" fill="#333">3. 工具集成: MCP 协议 ★ 推荐</text>
+
+        <path d="M280,386 L280,405 L240,405 L240,415" stroke="#ccc" fill="none"/>
+        <rect x="160" y="415" width="160" height="28" rx="14" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1.5"/>
+        <text x="240" y="434" text-anchor="middle" font-size="10" font-weight="600" fill="#1a7a1a">★ MCP 协议</text>
+
+        <path d="M460,386 L460,405 L480,405 L480,415" stroke="#ccc" fill="none"/>
+        <rect x="400" y="415" width="160" height="28" rx="14" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1.5"/>
+        <text x="480" y="434" text-anchor="middle" font-size="10" fill="#1a5c4a">原生集成</text>
+      </svg>
+      <div class="caption">图 13：核心技术选择决策树</div>
+    </div>
+
+    <h3>7.2 分阶段研发路线图</h3>
+
+    <div class="fig">
+      <svg viewBox="0 0 740 280" xmlns="http://www.w3.org/2000/svg">
+        <!-- Phase 1 -->
+        <rect x="10" y="20" width="230" height="44" rx="5" fill="#1a5c4a"/>
+        <text x="125" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">第一阶段: MVP</text>
+        <text x="125" y="56" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">2-3 个月 · 跑通核心链路</text>
+
+        <line x1="240" y1="42" x2="250" y2="42" stroke="#ccc"/>
+        <line x1="250" y1="42" x2="250" y2="86" stroke="#ccc"/>
+        <line x1="250" y1="86" x2="260" y2="86" stroke="#ccc"/>
+
+        <rect x="10" y="70" width="230" height="70" rx="5" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1"/>
+        <text x="125" y="90" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">核心里程碑</text>
+        <text x="125" y="106" text-anchor="middle" font-size="10" fill="#555">LLM 集成 · 流水线编排</text>
+        <text x="125" y="120" text-anchor="middle" font-size="10" fill="#555">3-5 工具集成 · Docker 沙箱</text>
+        <text x="125" y="134" text-anchor="middle" font-size="10" fill="#555">基础报告 · CTF 级别验证</text>
+
+        <!-- Arrow -->
+        <path d="M260,86 L280,86" stroke="#1a5c4a" stroke-width="3" marker-end="url(#arrow)"/>
+
+        <!-- Phase 2 -->
+        <rect x="290" y="20" width="230" height="44" rx="5" fill="#2d8a6f"/>
+        <text x="405" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">第二阶段: 增强</text>
+        <text x="405" y="56" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">3-4 个月 · 多智能体协作</text>
+
+        <rect x="290" y="70" width="230" height="70" rx="5" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="405" y="90" text-anchor="middle" font-size="11" font-weight="600" fill="#2d8a6f">核心里程碑</text>
+        <text x="405" y="106" text-anchor="middle" font-size="10" fill="#555">Orchestrator + 3-5 Worker</text>
+        <text x="405" y="120" text-anchor="middle" font-size="10" fill="#555">pgvector 记忆 · MCP 集成</text>
+        <text x="405" y="134" text-anchor="middle" font-size="10" fill="#555">CI/CD · PoC 验证 · AD/K8s</text>
+
+        <!-- Arrow -->
+        <path d="M540,86 L560,86" stroke="#1a5c4a" stroke-width="3" marker-end="url(#arrow)"/>
+
+        <!-- Phase 3 -->
+        <rect x="570" y="20" width="160" height="44" rx="5" fill="#0e3d31"/>
+        <text x="650" y="40" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">第三阶段: 成熟</text>
+        <text x="650" y="56" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.7)">4-6 个月 · 企业级</text>
+
+        <rect x="570" y="70" width="160" height="70" rx="5" fill="#f0f7f4" stroke="#0e3d31" stroke-width="1"/>
+        <text x="650" y="90" text-anchor="middle" font-size="11" font-weight="600" fill="#0e3d31">核心里程碑</text>
+        <text x="650" y="106" text-anchor="middle" font-size="10" fill="#555">知识图谱 · 多模型投票</text>
+        <text x="650" y="120" text-anchor="middle" font-size="10" fill="#555">Web UI · 领域微调</text>
+        <text x="650" y="134" text-anchor="middle" font-size="10" fill="#555">合规对齐 · 离线能力</text>
+
+        <!-- Timeline bar -->
+        <rect x="10" y="165" width="720" height="6" rx="3" fill="#ccc"/>
+        <rect x="10" y="165" width="230" height="6" rx="3" fill="#1a5c4a"/>
+        <rect x="240" y="165" width="290" height="6" rx="3" fill="#2d8a6f"/>
+        <rect x="530" y="165" width="200" height="6" rx="3" fill="#0e3d31"/>
+
+        <text x="125" y="190" text-anchor="middle" font-size="11" font-weight="600" fill="#1a5c4a">M1</text>
+        <text x="405" y="190" text-anchor="middle" font-size="11" font-weight="600" fill="#2d8a6f">M2</text>
+        <text x="650" y="190" text-anchor="middle" font-size="11" font-weight="600" fill="#0e3d31">M3</text>
+
+        <text x="125" y="208" text-anchor="middle" font-size="9" fill="#888">Month 2-3</text>
+        <text x="405" y="208" text-anchor="middle" font-size="9" fill="#888">Month 5-7</text>
+        <text x="650" y="208" text-anchor="middle" font-size="9" fill="#888">Month 9-13</text>
+
+        <!-- Final -->
+        <rect x="200" y="230" width="340" height="28" rx="14" fill="#e8b84b" opacity=".9"/>
+        <text x="370" y="249" text-anchor="middle" font-size="12" font-weight="700" fill="#333">🎯 总周期: 9-13 个月达到企业级可用</text>
+      </svg>
+      <div class="caption">图 14：三阶段研发路线图</div>
+    </div>
+
+    <h3>7.3 功能优先级矩阵</h3>
+
+    <div class="pri-grid">
+      <div class="pri-header">能力</div>
+      <div class="pri-header">MVP</div>
+      <div class="pri-header">增强</div>
+      <div class="pri-header">成熟</div>
+
+      <div class="pri-cell">基础工具集成 (Nmap 等)</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">LLM 集成 (1-2 模型)</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">流水线编排</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">Docker 沙箱</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">目标范围管理</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">报告生成</div>
+      <div class="pri-p1">P1</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">多智能体编排</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">MCP 协议集成</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p0">P0</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">PoC 验证</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">CI/CD 集成</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">AD 渗透 / K8s 审计</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+      <div class="pri-na">-</div>
+
+      <div class="pri-cell">知识图谱 (Neo4j)</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+
+      <div class="pri-cell">多模型投票去误报</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+
+      <div class="pri-cell">Web UI</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p1">P1</div>
+
+      <div class="pri-cell">LLM 领域微调</div>
+      <div class="pri-na">-</div>
+      <div class="pri-na">-</div>
+      <div class="pri-p2">P2</div>
+    </div>
+
+    <h3>7.4 参考架构设计</h3>
+
+    <div class="fig">
+      <svg viewBox="0 0 760 520" xmlns="http://www.w3.org/2000/svg">
+        <!-- User layer -->
+        <rect x="180" y="10" width="400" height="32" rx="4" fill="#0e3d31"/>
+        <text x="380" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">用户接口层</text>
+
+        <rect x="50" y="55" width="130" height="28" rx="4" fill="#1a5c4a"/>
+        <text x="115" y="74" text-anchor="middle" font-size="10" fill="#fff">💻 CLI 接口</text>
+        <rect x="200" y="55" width="130" height="28" rx="4" fill="#1a5c4a"/>
+        <text x="265" y="74" text-anchor="middle" font-size="10" fill="#fff">🌐 Web UI</text>
+        <rect x="350" y="55" width="130" height="28" rx="4" fill="#1a5c4a"/>
+        <text x="415" y="74" text-anchor="middle" font-size="10" fill="#fff">🔌 API 网关</text>
+        <rect x="500" y="55" width="130" height="28" rx="4" fill="#1a5c4a"/>
+        <text x="565" y="74" text-anchor="middle" font-size="10" fill="#fff">🔗 CI/CD 插件</text>
+
+        <line x1="380" y1="83" x2="380" y2="100" stroke="#ccc"/>
+
+        <!-- Orchestrator -->
+        <rect x="80" y="100" width="600" height="36" rx="5" fill="#e8b84b" opacity=".9"/>
+        <text x="380" y="124" text-anchor="middle" font-size="13" font-weight="700" fill="#333">编排层 — Orchestrator</text>
+
+        <rect x="100" y="148" width="180" height="28" rx="4" fill="#f8f0dc"/>
+        <text x="190" y="167" text-anchor="middle" font-size="10" fill="#333">🗂️ 任务规划 · 目标解析</text>
+        <rect x="300" y="148" width="180" height="28" rx="4" fill="#f8f0dc"/>
+        <text x="390" y="167" text-anchor="middle" font-size="10" fill="#333">📊 技术栈感知 · 动态调度</text>
+        <rect x="500" y="148" width="160" height="28" rx="4" fill="#f8f0dc"/>
+        <text x="580" y="167" text-anchor="middle" font-size="10" fill="#333">📋 多源融合 · 报告</text>
+
+        <line x1="380" y1="180" x2="380" y2="195" stroke="#ccc"/>
+
+        <!-- Agents -->
+        <rect x="50" y="195" width="660" height="32" rx="5" fill="#2d8a6f"/>
+        <text x="380" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">智能体层 — Agent Layer</text>
+
+        <rect x="70" y="238" width="90" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="115" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">Web 渗透</text>
+        <rect x="170" y="238" width="90" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="215" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">网络扫描</text>
+        <rect x="270" y="238" width="90" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="315" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">云审计</text>
+        <rect x="370" y="238" width="90" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="415" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">AD/K8s</text>
+        <rect x="470" y="238" width="90" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="515" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">AI 测试</text>
+        <rect x="570" y="238" width="120" height="28" rx="4" fill="#e6f7e6" stroke="#1a7a1a" stroke-width="1"/>
+        <text x="630" y="257" text-anchor="middle" font-size="10" fill="#1a7a1a">+ 自定义</text>
+
+        <line x1="380" y1="270" x2="380" y2="285" stroke="#ccc"/>
+
+        <!-- MCP Tools -->
+        <rect x="50" y="285" width="660" height="32" rx="5" fill="#1a5c4a"/>
+        <text x="380" y="306" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">MCP 工具接口层</text>
+
+        <rect x="70" y="328" width="110" height="26" rx="4" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="125" y="346" text-anchor="middle" font-size="9" fill="#2d8a6f">Nmap · httpx</text>
+        <rect x="190" y="328" width="110" height="26" rx="4" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="245" y="346" text-anchor="middle" font-size="9" fill="#2d8a6f">Nuclei · sqlmap</text>
+        <rect x="310" y="328" width="110" height="26" rx="4" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="365" y="346" text-anchor="middle" font-size="9" fill="#2d8a6f">Metasploit</text>
+        <rect x="430" y="328" width="110" height="26" rx="4" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="485" y="346" text-anchor="middle" font-size="9" fill="#2d8a6f">BloodHound</text>
+        <rect x="550" y="328" width="110" height="26" rx="4" fill="#f0f7f4" stroke="#2d8a6f" stroke-width="1"/>
+        <text x="605" y="346" text-anchor="middle" font-size="9" fill="#2d8a6f">PDF/SARIF</text>
+
+        <line x1="380" y1="358" x2="380" y2="373" stroke="#ccc"/>
+
+        <!-- Knowledge -->
+        <rect x="50" y="373" width="660" height="32" rx="5" fill="#0e3d31"/>
+        <text x="380" y="394" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">知识 & 记忆层</text>
+
+        <rect x="100" y="416" width="250" height="28" rx="4" fill="#e8b84b" opacity=".8"/>
+        <text x="225" y="435" text-anchor="middle" font-size="10" font-weight="600" fill="#333">🗄️ 向量数据库 (pgvector)</text>
+        <rect x="400" y="416" width="250" height="28" rx="4" fill="#e8b84b" opacity=".8"/>
+        <text x="525" y="435" text-anchor="middle" font-size="10" font-weight="600" fill="#333">🔗 知识图谱 (Neo4j)</text>
+
+        <line x1="380" y1="448" x2="380" y2="463" stroke="#ccc"/>
+
+        <!-- LLM Adapter -->
+        <rect x="50" y="463" width="660" height="32" rx="5" fill="#2d8a6f"/>
+        <text x="380" y="484" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">LLM 适配层 + 安全沙箱层</text>
+
+        <rect x="80" y="500" width="60" height="18" rx="9" fill="#e6f0fa"/>
+        <text x="110" y="513" text-anchor="middle" font-size="8" fill="#1a5c9a">GPT</text>
+        <rect x="150" y="500" width="60" height="18" rx="9" fill="#e6f0fa"/>
+        <text x="180" y="513" text-anchor="middle" font-size="8" fill="#1a5c9a">Claude</text>
+        <rect x="220" y="500" width="60" height="18" rx="9" fill="#e6f0fa"/>
+        <text x="250" y="513" text-anchor="middle" font-size="8" fill="#1a5c9a">Qwen</text>
+        <rect x="290" y="500" width="60" height="18" rx="9" fill="#e6f0fa"/>
+        <text x="320" y="513" text-anchor="middle" font-size="8" fill="#1a5c9a">DeepSeek</text>
+        <rect x="360" y="500" width="60" height="18" rx="9" fill="#e6f0fa"/>
+        <text x="390" y="513" text-anchor="middle" font-size="8" fill="#1a5c9a">Ollama</text>
+
+        <line x1="440" y1="509" x2="460" y2="509" stroke="#ccc"/>
+
+        <rect x="470" y="500" width="200" height="18" rx="4" fill="#f0f7f4" stroke="#1a5c4a" stroke-width="1"/>
+        <text x="570" y="513" text-anchor="middle" font-size="8" fill="#1a5c4a">Docker 沙箱 · 范围校验 · 审计</text>
+      </svg>
+      <div class="caption">图 15：推荐参考架构设计</div>
+    </div>
+
+    <h3>7.5 技术栈建议</h3>
+
+    <div class="tbl-wrap">
+    <table>
+      <tr><th>层次</th><th>推荐技术</th><th>备选方案</th></tr>
+      <tr><td>编程语言</td><td>Python 3.11+</td><td>Go / Rust</td></tr>
+      <tr><td>LLM 适配</td><td>LangChain / LlamaIndex</td><td>原生 API 调用</td></tr>
+      <tr><td>编排框架</td><td>LangGraph / CrewAI</td><td>自定义 State Machine</td></tr>
+      <tr><td>向量数据库</td><td>pgvector (PostgreSQL)</td><td>Qdrant / Milvus</td></tr>
+      <tr><td>知识图谱</td><td>Neo4j</td><td>Amazon Neptune</td></tr>
+      <tr><td>MCP 工具</td><td>FastMCP 集成</td><td>自定义 MCP Server</td></tr>
+      <tr><td>API 网关</td><td>FastAPI</td><td>Flask / Gin</td></tr>
+      <tr><td>Web UI</td><td>React + Tailwind</td><td>Vue.js</td></tr>
+      <tr><td>观测性</td><td>OpenTelemetry</td><td>Prometheus + Grafana</td></tr>
+    </table>
+    </div>
+
+    <h3>7.6 差异化竞争机会</h3>
+
+    <div class="card-grid">
+      <div class="card">
+        <h4>🇨🇳 中文生态深度优化</h4>
+        <p>主流工具以英文为主，中文安全团队使用门槛高。中文文档、中文提示词优化是显著的差异化机会。</p>
+      </div>
+      <div class="card">
+        <h4>🔀 混合架构创新</h4>
+        <p>流水线确定性 + 编排式灵活性的混合模式，目前尚未有成熟实现。</p>
+      </div>
+      <div class="card">
+        <h4>🎯 领域微调模型</h4>
+        <p>基于 Qwen/DeepSeek 的安全领域微调，保留完整攻击技术知识的同时消除拒绝倾向。</p>
+      </div>
+      <div class="card">
+        <h4>🔗 多领域一体化</h4>
+        <p>Web + 基础设施 + AI 模型的一体化测试平台，目前尚无完整实现。</p>
+      </div>
+    </div>
+
+    <hr style="margin: 48px 0; border: none; border-top: 2px solid var(--border);">
+
+    <p style="text-align: center; color: var(--text-muted); font-size: .85rem;">
+      <strong>研究报告结束</strong><br>
+      本报告基于 2026 年 5 月公开信息和学术论文撰写。<br>
+      工具能力、许可证和市场状态可能发生变化，请以各项目官方信息为准。
+    </p>
+
+  </div><!-- .content -->
+</div><!-- .main -->
+
+<script>
+// Sidebar active tracking
+const sidebarLinks = document.querySelectorAll('.sidebar nav a');
+const sections = [];
+document.querySelectorAll('h2[id], h3[id]').forEach(el => sections.push(el));
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if (window.scrollY >= s.offsetTop - 120) current = s.id; });
+  sidebarLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+</body>
+</html>

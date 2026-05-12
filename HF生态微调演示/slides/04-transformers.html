@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>04 · Transformers — 核心库深度解析</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl {
+    font-size: 16px; font-weight: 600; color: var(--accent);
+    margin-bottom: 12px; letter-spacing: 0.04em;
+  }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx p small { font-size: 14px; color: var(--ink-light); }
+  .cx .sub { margin-top: 8px; padding-left: 16px; border-left: 2px solid var(--accent-light); }
+  .cx .sub p { font-size: 15px; color: var(--ink-light); line-height: 1.6; }
+
+  .cx .code {
+    font-family: var(--mono); font-size: 14px; line-height: 1.5;
+    background: var(--code-bg); border-radius: 3px;
+    padding: 12px 16px; margin-top: 8px; color: var(--ink);
+  }
+  .cx .code .kw { color: #994CC5; }
+  .cx .code .fn { color: #1A5C4A; }
+  .cx .code .cm { color: var(--ink-light); font-style: italic; }
+
+  .stats3 {
+    display: flex; gap: 10px; margin-top: 8px;
+  }
+  .stats3 .si {
+    flex: 1; text-align: center; background: var(--accent-light);
+    border-radius: 5px; padding: 14px 10px;
+  }
+  .stats3 .si .n {
+    font-family: var(--display); font-size: 30px; font-weight: 700;
+    color: var(--accent); line-height: 1.1;
+  }
+  .stats3 .si .l { font-size: 13px; color: var(--ink-muted); margin-top: 4px; }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>核心库</p></div>
+  <h1>Transformers 库深度解析</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">架构全景</p>
+    <div class="cx" style="border-left:3px solid #1A5C4A;">
+      <h4>顶层 API · 用户直接使用</h4>
+      <div class="sub"><p>Pipeline API — 一行代码完成推理<br>Auto Classes — 自动加载模型/分词器<br>Trainer API — 完整训练循环<br>Generation API — 多种解码策略</p></div>
+    </div>
+    <div class="cx" style="border-left:3px solid #2E7D6B;">
+      <h4>核心子系统</h4>
+      <div class="sub"><p>PreTrainedModel · Tokenizer · ImageProcessor<br>Hub 集成 · PretrainedConfig · Callbacks</p></div>
+    </div>
+    <div class="cx" style="border-left:3px solid #4A6FA5;">
+      <h4>后端支持</h4>
+      <p>PyTorch（v5.0+ 唯一支持）<br>TensorFlow / JAX（v5.0 已移除）</p>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">Pipeline · Auto Classes · Trainer</p>
+    <div class="cx">
+      <h4>Pipeline 四阶段与 Auto Classes</h4>
+      <p><strong>预处理</strong> → <strong>前向传播</strong> → <strong>后处理</strong> → 输出</p>
+      <p small>内置 30+ 种 Pipeline 任务</p>
+      <div class="code">
+        <span class="kw">from</span> transformers <span class="kw">import</span> AutoModelForCausalLM<br>
+        model = AutoModelForCausalLM.<span class="fn">from_pretrained</span>(<span class="cm">"Qwen3-8B"</span>)
+      </div>
+    </div>
+    <div class="cx">
+      <h4>PreTrainedModel 继承体系</h4>
+      <div class="code">
+        PreTrainedModel (PeftAdapterMixin)<br>
+        &nbsp;├── LlamaPreTrainedModel → LlamaForCausalLM<br>
+        &nbsp;├── Qwen2PreTrainedModel → Qwen2ForCausalLM<br>
+        &nbsp;└── ... 400+ 架构
+      </div>
+    </div>
+    <div class="cx">
+      <h4>Trainer 内置功能</h4>
+      <p>混合精度 · 梯度累积/裁剪 · LR 调度<br>检查点保存 · 实验跟踪 · 分布式训练</p>
+      <div class="stats3">
+        <div class="si"><p class="n">400+</p><p class="l">模型架构</p></div>
+        <div class="si"><p class="n">30+</p><p class="l">Pipeline</p></div>
+        <div class="si"><p class="n">3</p><p class="l">分词后端</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第二章 · Transformers 库</p><p>04 / 14</p></div>
+</body>
+</html>

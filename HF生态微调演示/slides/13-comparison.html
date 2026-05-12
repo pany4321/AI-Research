@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>13 · 三大框架对比 — 选型决策</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .content-area {
+    position: absolute; top: 150px; left: 80px; right: 80px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+
+  .ch-row {
+    display: flex; gap: 10px;
+  }
+  .ch-row .ch {
+    flex: 1; text-align: center; padding: 10px 10px; border-radius: 5px;
+    font-family: var(--display); font-size: 20px; font-weight: 700;
+  }
+
+  .cr {
+    display: flex; gap: 10px; align-items: center;
+  }
+  .cr .lbl {
+    width: 160px; flex-shrink: 0;
+    font-size: 15px; font-weight: 500; color: var(--ink); padding: 5px 0;
+  }
+  .cr .cell {
+    flex: 1; padding: 8px 14px;
+    background: var(--surface); border-radius: 4px;
+    border: 1px solid rgba(0,0,0,0.04);
+    display: flex; align-items: center; gap: 6px;
+    font-size: 14px; color: var(--ink-muted); line-height: 1.4;
+  }
+  .cr .cell.hl { background: var(--accent-light); }
+  .cr .cell .ok { color: var(--accent); font-weight: 700; }
+  .cr .cell .no { color: var(--ink-light); }
+
+  .bottom-row {
+    display: flex; gap: 20px; margin-top: 4px;
+  }
+  .bottom-row .br { flex: 1; }
+  .bottom-row .br h4 { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 6px; }
+  .bottom-row .br p { font-size: 14px; color: var(--ink-muted); line-height: 1.5; }
+  .bottom-row .br .tag {
+    display: inline-block; font-family: var(--mono); font-size: 12px;
+    padding: 3px 14px; border-radius: 99px; margin-top: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>框架对比</p></div>
+  <h1>三大微调框架对比与选型</h1>
+</div>
+
+<div class="content-area">
+  <div class="ch-row">
+    <div class="ch" style="background:#E8F0ED; color:#1A5C4A;">LLaMA-Factory</div>
+    <div class="ch" style="background:#FDF0EC; color:#C75B3A;">Unsloth</div>
+    <div class="ch" style="background:#EDF0F5; color:#4A6FA5;">Axolotl</div>
+  </div>
+
+  <div class="cr">
+    <span class="lbl">设计哲学</span>
+    <div class="cell">一站式 · 开箱即用</div>
+    <div class="cell hl">极致性能 · 算子级优化</div>
+    <div class="cell">配置即代码 · 企业级</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">训练速度</span>
+    <div class="cell">基线 (1×)</div>
+    <div class="cell hl">2× 基线</div>
+    <div class="cell">接近基线</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">显存效率</span>
+    <div class="cell">标准</div>
+    <div class="cell hl">减少 70%</div>
+    <div class="cell">标准</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">MoE / 长上下文</span>
+    <div class="cell">标准 / 需 DeepSpeed</div>
+    <div class="cell hl">12× 加速 / 500K+</div>
+    <div class="cell">标准 / 需配置</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">训练方法</span>
+    <div class="cell">SFT/DPO/<span class="ok">PPO</span>/<span class="ok">KTO</span>/GRPO</div>
+    <div class="cell hl">SFT/DPO/GRPO</div>
+    <div class="cell">SFT/DPO/KTO/<span class="ok">ORPO</span>/SimPO/GRPO</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">用户接口</span>
+    <div class="cell">Web UI + CLI + API</div>
+    <div class="cell">Python API + Studio</div>
+    <div class="cell">CLI（YAML）</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">分布式</span>
+    <div class="cell">多节点支持</div>
+    <div class="cell">多节点（计划中）</div>
+    <div class="cell hl">Slurm + 云平台</div>
+  </div>
+  <div class="cr">
+    <span class="lbl">学习曲线</span>
+    <div class="cell"><span class="ok">低</span> · Web UI 零代码</div>
+    <div class="cell">中 · 两行代码接入</div>
+    <div class="cell">高 · YAML + 分布式经验</div>
+  </div>
+
+  <div class="bottom-row">
+    <div class="br">
+      <h4>入门首选</h4>
+      <p>初学者、快速验证 → LLaMA-Factory Web UI 零代码</p>
+      <span class="tag" style="background:#E8F0ED; color:#1A5C4A;">零代码</span>
+    </div>
+    <div class="br">
+      <h4>性能优先</h4>
+      <p>单卡 GPU、MoE 模型 → Unsloth 2× 加速</p>
+      <span class="tag" style="background:#FDF0EC; color:#C75B3A;">2× 加速</span>
+    </div>
+    <div class="br">
+      <h4>生产部署</h4>
+      <p>企业集群、标准化流程 → Axolotl YAML 配置</p>
+      <span class="tag" style="background:#EDF0F5; color:#4A6FA5;">企业级</span>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第十一章 · 三大框架对比</p><p>13 / 14</p></div>
+</body>
+</html>

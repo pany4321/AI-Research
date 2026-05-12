@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 750">
+  <defs>
+    <linearGradient id="accGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="ddpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dsGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="fsdpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">Accelerate 分布式训练引擎架构</text>
+
+  <!-- Accelerator Core -->
+  <g transform="translate(150, 60)" filter="url(#shadow)">
+    <rect width="600" height="80" rx="10" fill="url(#accGrad)"/>
+    <text x="300" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🎛️ Accelerator (核心编排器)</text>
+    <text x="300" y="55" text-anchor="middle" font-family="Arial" font-size="12" fill="#e0f0ff">设备管理 · 混合精度 · 分布式后端选择 · 梯度同步</text>
+  </g>
+
+  <!-- Four prepare items in a row -->
+  <g transform="translate(50, 160)">
+    <!-- Model -->
+    <rect width="180" height="70" rx="8" fill="#667eea" filter="url(#shadow)"/>
+    <text x="90" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">prepare(model)</text>
+    <text x="90" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">· DDP 包装</text>
+    <text x="90" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">· DeepSpeed 引擎</text>
+
+    <!-- Optimizer -->
+    <rect x="200" width="180" height="70" rx="8" fill="#764ba2" filter="url(#shadow)"/>
+    <text x="290" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">prepare(optimizer)</text>
+    <text x="290" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">· DS 优化器</text>
+    <text x="290" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">· 标准优化器</text>
+
+    <!-- DataLoader -->
+    <rect x="400" width="180" height="70" rx="8" fill="#f093fb" filter="url(#shadow)"/>
+    <text x="490" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">prepare(dataloader)</text>
+    <text x="490" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#ffe0f0">· 分布式采样器</text>
+    <text x="490" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#ffe0f0">· 批次拆分</text>
+
+    <!-- backward -->
+    <rect x="600" width="180" height="70" rx="8" fill="#43e97b" filter="url(#shadow)"/>
+    <text x="690" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">backward(loss)</text>
+    <text x="690" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0fff0">· 梯度同步</text>
+    <text x="690" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0fff0">· 混合精度缩放</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="240" x2="450" y2="260" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Distributed Backends -->
+  <g transform="translate(50, 270)" filter="url(#shadow)">
+    <rect width="800" height="200" rx="10" fill="#2c3e50"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🔌 分布式后端插件系统</text>
+
+    <!-- DDP -->
+    <g transform="translate(20, 45)">
+      <rect width="170" height="140" rx="5" fill="url(#ddpGrad)"/>
+      <text x="85" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">DDP</text>
+      <text x="85" y="50" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">DistributedDataParallel</text>
+      <text x="85" y="75" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 每 GPU 完整模型</text>
+      <text x="85" y="95" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 梯度 all-reduce</text>
+      <text x="85" y="115" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 单机多卡</text>
+      <text x="85" y="130" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 最简单形式</text>
+    </g>
+
+    <!-- DeepSpeed ZeRO-1 -->
+    <g transform="translate(210, 45)">
+      <rect width="170" height="140" rx="5" fill="url(#dsGrad)"/>
+      <text x="85" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">DeepSpeed ZeRO-1</text>
+      <text x="85" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 优化器状态分片</text>
+      <text x="85" y="70" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 低通信量</text>
+      <text x="85" y="90" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 大模型友好</text>
+      <text x="85" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 显存 -30%</text>
+      <text x="85" y="130" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 推荐默认</text>
+    </g>
+
+    <!-- DeepSpeed ZeRO-2 -->
+    <g transform="translate(400, 45)">
+      <rect width="170" height="140" rx="5" fill="url(#dsGrad)"/>
+      <text x="85" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">DeepSpeed ZeRO-2</text>
+      <text x="85" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 优化器 + 梯度分片</text>
+      <text x="85" y="70" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 中等通信量</text>
+      <text x="85" y="90" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 更大模型</text>
+      <text x="85" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 显存 -50%</text>
+      <text x="85" y="130" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 平衡选择</text>
+    </g>
+
+    <!-- DeepSpeed ZeRO-3 -->
+    <g transform="translate(590, 45)">
+      <rect width="170" height="140" rx="5" fill="url(#dsGrad)"/>
+      <text x="85" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">DeepSpeed ZeRO-3</text>
+      <text x="85" y="50" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">· 优化器 + 梯度 + 参数</text>
+      <text x="85" y="70" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 高通信量</text>
+      <text x="85" y="90" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 超大模型</text>
+      <text x="85" y="110" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 显存 -70%</text>
+      <text x="85" y="130" text-anchor="middle" font-family="Arial" font-size="9" fill="#e0e0ff">· 多机多卡</text>
+    </g>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="480" x2="450" y2="500" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- FSDP -->
+  <g transform="translate(50, 510)" filter="url(#shadow)">
+    <rect width="800" height="110" rx="10" fill="url(#fsdpGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🔷 FSDP (Fully Sharded Data Parallel)</text>
+
+    <g transform="translate(20, 45)">
+      <rect width="240" height="50" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="120" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">FULL_SHARD</text>
+      <text x="120" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">等价 ZeRO-3 · 全分片</text>
+
+      <rect x="260" width="240" height="50" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="380" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">SHARD_GRAD_OP</text>
+      <text x="380" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">等价 ZeRO-2 · 梯度分片</text>
+
+      <rect x="520" width="240" height="50" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="640" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">NO_SHARD</text>
+      <text x="640" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">等价 DDP · 不分片</text>
+    </g>
+  </g>
+
+  <!-- Mixed Precision -->
+  <g transform="translate(50, 635)" filter="url(#shadow)">
+    <rect width="800" height="80" rx="10" fill="#34495e"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">🎚️ 混合精度支持</text>
+    <text x="400" y="50" text-anchor="middle" font-family="Arial" font-size="12" fill="#e0e0e0">FP16 (GradScaler) · BF16 (原生) · FP8 (TransformerEngine / MS-AMP)</text>
+  </g>
+</svg>

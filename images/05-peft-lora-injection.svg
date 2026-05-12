@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 800">
+  <defs>
+    <linearGradient id="loraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="baseGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="injectGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">PEFT LoRA 适配器注入机制</text>
+
+  <!-- Original Model -->
+  <g transform="translate(50, 60)" filter="url(#shadow)">
+    <rect width="350" height="150" rx="10" fill="url(#baseGrad)"/>
+    <text x="175" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">原始预训练模型</text>
+
+    <!-- Linear layers -->
+    <g transform="translate(30, 45)">
+      <rect width="290" height="25" rx="3" fill="rgba(255,255,255,0.3)"/>
+      <text x="145" y="17" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">nn.Linear (q_proj) - 冻结</text>
+
+      <rect y="35" width="290" height="25" rx="3" fill="rgba(255,255,255,0.3)"/>
+      <text x="145" y="47" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">nn.Linear (k_proj) - 冻结</text>
+
+      <rect y="70" width="290" height="25" rx="3" fill="rgba(255,255,255,0.3)"/>
+      <text x="145" y="82" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">nn.Linear (v_proj) - 冻结</text>
+
+      <rect y="105" width="290" height="25" rx="3" fill="rgba(255,255,255,0.3)"/>
+      <text x="145" y="117" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">nn.Linear (o_proj) - 冻结</text>
+    </g>
+  </g>
+
+  <!-- Arrow with label -->
+  <line x1="420" y1="135" x2="470" y2="135" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <text x="445" y="125" text-anchor="middle" font-family="Arial" font-size="11" fill="#666">get_peft_model()</text>
+
+  <!-- LoRA Config -->
+  <g transform="translate(500, 80)" filter="url(#shadow)">
+    <rect width="350" height="60" rx="8" fill="url(#injectGrad)"/>
+    <text x="175" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">LoRA 配置</text>
+    <text x="175" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">r=8, alpha=16, target_modules=["q_proj", "v_proj"]</text>
+  </g>
+
+  <!-- Arrow down -->
+  <line x1="450" y1="220" x2="450" y2="240" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Injected Model -->
+  <g transform="translate(50, 250)" filter="url(#shadow)">
+    <rect width="800" height="200" rx="10" fill="url(#loraGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">注入 LoRA 适配器后的模型</text>
+
+    <!-- Layer with LoRA -->
+    <g transform="translate(30, 45)">
+      <!-- q_proj + LoRA -->
+      <rect width="170" height="60" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="85" y="20" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">q_proj (冻结)</text>
+      <rect x="10" y="30" width="30" height="20" rx="2" fill="#4facfe"/>
+      <text x="25" y="44" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">LoRA_A</text>
+      <rect x="50" y="30" width="30" height="20" rx="2" fill="#00f2fe"/>
+      <text x="65" y="44" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">LoRA_B</text>
+      <path d="M 40 40 L 50 40" stroke="#fff" stroke-width="1.5"/>
+      <text x="100" y="44" font-family="Arial" font-size="16" fill="#fff">×</text>
+
+      <!-- k_proj frozen -->
+      <rect x="190" width="170" height="60" rx="5" fill="rgba(255,255,255,0.1)"/>
+      <text x="275" y="35" text-anchor="middle" font-family="Arial" font-size="11" fill="#ccc">k_proj (冻结，无 LoRA)</text>
+
+      <!-- v_proj + LoRA -->
+      <rect y="80" x="30" width="170" height="60" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="85" y="100" text-anchor="middle" font-family="Arial" font-size="11" font-weight="bold" fill="#fff">v_proj (冻结)</text>
+      <rect x="10" y="110" width="30" height="20" rx="2" fill="#4facfe"/>
+      <text x="25" y="124" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">LoRA_A</text>
+      <rect x="50" y="110" width="30" height="20" rx="2" fill="#00f2fe"/>
+      <text x="65" y="124" text-anchor="middle" font-family="Arial" font-size="8" fill="#fff">LoRA_B</text>
+      <path d="M 40 120 L 50 120" stroke="#fff" stroke-width="1.5"/>
+      <text x="100" y="124" font-family="Arial" font-size="16" fill="#fff">×</text>
+
+      <!-- o_proj frozen -->
+      <rect x="190" y="80" width="170" height="60" rx="5" fill="rgba(255,255,255,0.1)"/>
+      <text x="275" y="115" text-anchor="middle" font-family="Arial" font-size="11" fill="#ccc">o_proj (冻结，无 LoRA)</text>
+    </g>
+
+    <!-- Legend on the right -->
+    <g transform="translate(500, 50)">
+      <rect width="270" height="130" rx="5" fill="rgba(0,0,0,0.2)"/>
+      <text x="135" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">图例说明</text>
+
+      <rect x="20" y="40" width="30" height="20" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <text x="60" y="55" font-family="Arial" font-size="10" fill="#fff">原始权重 (冻结)</text>
+
+      <rect x="20" y="70" width="30" height="20" rx="2" fill="#4facfe"/>
+      <text x="60" y="85" font-family="Arial" font-size="10" fill="#fff">LoRA_A (可训练)</text>
+
+      <rect x="20" y="100" width="30" height="20" rx="2" fill="#00f2fe"/>
+      <text x="60" y="115" font-family="Arial" font-size="10" fill="#fff">LoRA_B (可训练)</text>
+
+      <text x="150" y="55" font-family="Arial" font-size="10" fill="#ccc">requires_grad=False</text>
+      <text x="150" y="85" font-family="Arial" font-size="10" fill="#fff">d×r, 可训练</text>
+      <text x="150" y="115" font-family="Arial" font-size="10" fill="#fff">r×d, 可训练</text>
+    </g>
+  </g>
+
+  <!-- LoRA Forward Formula -->
+  <g transform="translate(50, 470)" filter="url(#shadow)">
+    <rect width="800" height="120" rx="10" fill="#2c3e50"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">LoRA 前向传播公式</text>
+
+    <text x="400" y="65" text-anchor="middle" font-family="Arial, monospace" font-size="18" fill="#4facfe">h = Wx + BAx · (α/r)</text>
+
+    <g transform="translate(30, 80)">
+      <text x="100" y="0" font-family="Arial" font-size="10" fill="#e0e0ff">W: 原始权重 (冻结)</text>
+      <text x="300" y="0" font-family="Arial" font-size="10" fill="#4facfe">A: 下投影矩阵 (d→r)</text>
+      <text x="500" y="0" font-family="Arial" font-size="10" fill="#00f2fe">B: 上投影矩阵 (r→d)</text>
+      <text x="700" y="0" font-family="Arial" font-size="10" fill="#f39c12">α/r: 缩放系数</text>
+    </g>
+  </g>
+
+  <!-- Training Comparison -->
+  <g transform="translate(50, 610)" filter="url(#shadow)">
+    <rect width="380" height="160" rx="10" fill="url(#baseGrad)"/>
+    <text x="190" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">全量微调 vs LoRA 微调</text>
+
+    <g transform="translate(20, 40)">
+      <text x="50" y="0" font-family="Arial" font-size="11" fill="#fff">全量微调:</text>
+      <rect x="50" y="10" width="200" height="15" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <text x="260" y="22" font-family="Arial" font-size="9" fill="#fff">100% 参数可训练</text>
+
+      <text x="50" y="45" font-family="Arial" font-size="11" fill="#fff">LoRA 微调:</text>
+      <rect x="50" y="55" width="20" height="15" rx="2" fill="rgba(255,255,255,0.3)"/>
+      <rect x="70" y="55" width="180" height="15" rx="2" fill="#4facfe"/>
+      <text x="260" y="67" font-family="Arial" font-size="9" fill="#fff">~1% 参数可训练</text>
+
+      <text x="50" y="90" font-family="Arial" font-size="10" fill="#e0e0ff">显存节省：10-20 倍</text>
+      <text x="50" y="110" font-family="Arial" font-size="10" fill="#e0e0ff">速度提升：2-5 倍</text>
+      <text x="50" y="130" font-family="Arial" font-size="10" fill="#e0e0ff">效果接近全量微调</text>
+    </g>
+
+    <!-- Memory comparison -->
+    <rect x="410" width="440" height="160" rx="10" fill="url(#loraGrad)"/>
+    <text x="630" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">显存占用对比 (以 7B 模型为例)</text>
+
+    <g transform="translate(430, 40)">
+      <text x="50" y="0" font-family="Arial" font-size="11" fill="#fff">全量微调:</text>
+      <rect x="50" y="10" width="300" height="25" rx="3" fill="rgba(255,255,255,0.3)"/>
+      <text x="360" y="27" font-family="Arial" font-size="10" fill="#fff">~80GB</text>
+
+      <text x="50" y="55" font-family="Arial" font-size="11" fill="#fff">QLoRA:</text>
+      <rect x="50" y="65" width="100" height="25" rx="3" fill="#4facfe"/>
+      <text x="160" y="82" font-family="Arial" font-size="10" fill="#fff">~12GB</text>
+
+      <text x="50" y="110" font-family="Arial" font-size="11" fill="#fff">LoRA:</text>
+      <rect x="50" y="120" width="150" height="25" rx="3" fill="#00f2fe"/>
+      <text x="210" y="137" font-family="Arial" font-size="10" fill="#fff">~20GB</text>
+    </g>
+  </g>
+</svg>

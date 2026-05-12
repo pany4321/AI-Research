@@ -1,0 +1,127 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650">
+  <defs>
+    <linearGradient id="arrowGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="boxGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="boxGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="boxGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1" />
+    </linearGradient>
+    <filter id="shadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">Datasets 库存储引擎与数据流</text>
+
+  <!-- User API Layer -->
+  <g transform="translate(50, 60)" filter="url(#shadow)">
+    <rect width="800" height="60" rx="8" fill="url(#boxGrad1)"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial" font-size="15" font-weight="bold" fill="#fff">📦 用户 API 层</text>
+    <text x="400" y="48" text-anchor="middle" font-family="Arial" font-size="12" fill="#ffe0e0">load_dataset() / map() / filter() / set_format("torch")</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="125" x2="450" y2="145" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Dataset Classes -->
+  <g transform="translate(50, 155)" filter="url(#shadow)">
+    <rect width="380" height="100" rx="8" fill="url(#boxGrad2)"/>
+    <text x="190" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">Dataset (内存/内存映射)</text>
+    <text x="190" y="50" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0f0ff">· 基于 Arrow 表</text>
+    <text x="190" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0f0ff">· 支持随机访问</text>
+    <text x="190" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0f0ff">· 适用于中小数据集</text>
+
+    <rect x="420" width="380" height="100" rx="8" fill="url(#boxGrad3)"/>
+    <text x="610" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">IterableDataset (流式)</text>
+    <text x="610" y="50" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0fff0">· 逐样本加载</text>
+    <text x="610" y="70" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0fff0">· 无需全部载入内存</text>
+    <text x="610" y="90" text-anchor="middle" font-family="Arial" font-size="11" fill="#e0fff0">· 适用于超大数据集</text>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="260" x2="450" y2="280" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Apache Arrow Storage Engine -->
+  <g transform="translate(50, 290)" filter="url(#shadow)">
+    <rect width="800" height="180" rx="10" fill="url(#arrowGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">💾 Apache Arrow 存储引擎</text>
+
+    <!-- Arrow features -->
+    <g transform="translate(20, 45)">
+      <!-- Columnar Memory -->
+      <rect width="170" height="115" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="85" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">列式内存格式</text>
+      <text x="85" y="50" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">只读取需要的列</text>
+      <text x="85" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">I/O 效率高</text>
+      <text x="85" y="95" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">CPU 缓存友好</text>
+
+      <!-- Zero-Copy -->
+      <rect x="190" width="170" height="115" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="275" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">零拷贝读取</text>
+      <text x="275" y="50" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">无序列化开销</text>
+      <text x="275" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">直接内存访问</text>
+      <text x="275" y="95" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">性能提升 10-100x</text>
+
+      <!-- Memory Mapping -->
+      <rect x="380" width="170" height="115" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="465" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">内存映射</text>
+      <text x="465" y="50" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">虚拟内存技术</text>
+      <text x="465" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">处理 > RAM 数据</text>
+      <text x="465" y="95" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">按需分页加载</text>
+
+      <!-- SIMD -->
+      <rect x="570" width="170" height="115" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="655" y="25" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">向量化操作</text>
+      <text x="655" y="50" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">SIMD 指令加速</text>
+      <text x="655" y="70" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">批量数据处理</text>
+      <text x="655" y="95" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">CPU 原生优化</text>
+    </g>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="475" x2="450" y2="495" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- File Formats -->
+  <g transform="translate(50, 505)" filter="url(#shadow)">
+    <rect width="800" height="80" rx="8" fill="#6c7a89"/>
+    <text x="400" y="25" text-anchor="middle" font-family="Arial" font-size="14" font-weight="bold" fill="#fff">📁 输入文件格式</text>
+    <text x="400" y="50" text-anchor="middle" font-family="Arial" font-size="12" fill="#e0e0e0">Parquet / JSON / JSONL / CSV / Arrow / 本地文件</text>
+  </g>
+
+  <!-- Data flow visualization on the right -->
+  <g transform="translate(650, 300)">
+    <text x="100" y="0" text-anchor="middle" font-family="Arial" font-size="11" fill="#666" font-style="italic">数据流向</text>
+
+    <!-- Flow boxes -->
+    <g transform="translate(50, 20)">
+      <rect width="100" height="30" rx="3" fill="#f39c12"/>
+      <text x="50" y="20" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">原始数据</text>
+
+      <line x1="50" y1="30" x2="50" y2="50" stroke="#666" stroke-width="1.5"/>
+
+      <rect width="100" height="30" rx="3" fill="#e74c3c"/>
+      <text x="50" y="20" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">Arrow 表</text>
+
+      <line x1="50" y1="30" x2="50" y2="50" stroke="#666" stroke-width="1.5"/>
+
+      <rect width="100" height="30" rx="3" fill="#3498db"/>
+      <text x="50" y="20" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">map/filter</text>
+
+      <line x1="50" y1="30" x2="50" y2="50" stroke="#666" stroke-width="1.5"/>
+
+      <rect width="100" height="30" rx="3" fill="#2ecc71"/>
+      <text x="50" y="20" text-anchor="middle" font-family="Arial" font-size="9" fill="#fff">PyTorch 张量</text>
+    </g>
+  </g>
+</svg>

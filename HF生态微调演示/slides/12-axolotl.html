@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>12 · Axolotl — 企业级微调框架</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 12px; letter-spacing: 0.04em; }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx .code {
+    font-family: var(--mono); font-size: 14px; line-height: 1.5;
+    background: var(--code-bg); border-radius: 3px;
+    padding: 12px 16px; margin-top: 6px; color: var(--ink);
+  }
+  .cx .code .kw { color: #994CC5; }
+
+  .p6 { display: flex; flex-direction: column; gap: 3px; margin: 6px 0; }
+  .p6 .s {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 12px; border-radius: 3px; font-size: 14px;
+  }
+  .p6 .s .i { font-family: var(--mono); font-size: 11px; font-weight: 600; width: 16px; flex-shrink: 0; text-align: right; }
+
+  .cg { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+  .cg .c {
+    font-size: 13px; padding: 4px 14px; border-radius: 99px;
+    background: var(--code-bg); color: var(--ink-muted);
+  }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>企业级框架</p></div>
+  <h1>Axolotl 框架</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">设计理念</p>
+    <div class="cx">
+      <h4>「配置即代码」</h4>
+      <p>将复杂的 Python 训练脚本转化为声明式 YAML 配置，无需编写训练脚本即可启动微调。</p>
+      <p small>GitHub 11.7k+ Stars · 企业级分布式训练支持</p>
+    </div>
+    <div class="cx">
+      <h4>YAML 配置示例</h4>
+      <div class="code">
+        base_model: Qwen/Qwen2.5-7B<br>
+        adapter: qlora<br>
+        lora_r: 32<br>
+        datasets: [{path: train.jsonl, type: alpaca}]<br>
+        micro_batch_size: 2<br>
+        gradient_accumulation_steps: 4
+      </div>
+    </div>
+    <div class="cx">
+      <h4>六阶段训练流水线</h4>
+      <div class="p6">
+        <div class="s" style="background:#F5F0E0;"><span class="i" style="color:#8B6914;">1</span>配置加载 → YAML 解析 + Pydantic 验证</div>
+        <div class="s" style="background:#EDF0F5;"><span class="i" style="color:#4A6FA5;">2</span>环境设置 → FSDP / DeepSpeed + 混合精度</div>
+        <div class="s" style="background:#E8F0ED;"><span class="i" style="color:#1A5C4A;">3</span>数据集加载 → 分词/过滤/打包/缓存</div>
+        <div class="s" style="background:#FDF0EC;"><span class="i" style="color:#C75B3A;">4</span>模型加载 → 量化 + FlashAttn + 适配器</div>
+        <div class="s" style="background:#EDEBE6;"><span class="i" style="color:#6B6B6B;">5</span>训练器构建 → 参数 + 优化器 + 回调</div>
+        <div class="s" style="background:#E8E4DA;"><span class="i" style="color:#555;">6</span>训练与保存 → 检查点 + 适配器导出</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">企业特性</p>
+    <div class="cx">
+      <h4>训练器 &amp; 回调系统</h4>
+      <p>训练器构建器模式：配置参数 → 设置优化器 → 数据整理 → 注册回调 → 实例化</p>
+      <p>预训练器回调：GC / 检查点 / WandB / MLflow / 遥测</p>
+      <p>后训练器回调：BenchEval / EarlyStopping / ReLoRA / LISA</p>
+    </div>
+    <div class="cx">
+      <h4>ModelLoader 流程</h4>
+      <p>预加载补丁 → 设备映射 + 量化 + Attention → AutoModel 构建 → 适配器注入</p>
+    </div>
+    <div class="cx">
+      <h4>数据处理</h4>
+      <p>支持 Alpaca、ShareGPT、Completion 格式，支持 sample_packing</p>
+    </div>
+    <div class="cx">
+      <h4>云平台集成</h4>
+      <div class="cg">
+        <span class="c">Databricks</span><span class="c">AWS SageMaker</span>
+        <span class="c">Azure ML</span><span class="c">Runpod</span>
+        <span class="c">Modal</span><span class="c">Slurm</span>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>最新特性（2025–2026）</h4>
+      <p>异步 GRPO (58% 加速) · ScatterMoE+LoRA · Flash Attention 4 · Sequence Parallelism</p>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第十章 · Axolotl 框架</p><p>12 / 14</p></div>
+</body>
+</html>

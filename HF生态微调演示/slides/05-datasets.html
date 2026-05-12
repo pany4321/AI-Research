@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>05 · Datasets — 数据处理层</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl {
+    font-size: 16px; font-weight: 600; color: var(--accent);
+    margin-bottom: 12px; letter-spacing: 0.04em;
+  }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx p small { font-size: 14px; color: var(--ink-light); }
+  .cx code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 1px 8px; border-radius: 3px;
+    color: var(--accent);
+  }
+  .cx .code {
+    font-family: var(--mono); font-size: 14px; line-height: 1.5;
+    background: var(--code-bg); border-radius: 3px;
+    padding: 12px 16px; margin-top: 6px; color: var(--ink);
+  }
+
+  .ar-stack {
+    display: flex; flex-direction: column; gap: 4px; margin: 10px 0;
+  }
+  .ar-stack .ar {
+    display: flex; align-items: center; justify-content: center;
+    padding: 8px 12px; border-radius: 3px;
+    font-family: var(--mono); font-size: 13px;
+  }
+  .ar-stack .ar.t { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+  .ar-stack .ar.m { background: var(--code-bg); color: var(--ink-muted); }
+  .ar-stack .ar.b { background: #DDD9D0; color: var(--ink-muted); }
+
+  .api-tbl { width: 100%; border-collapse: collapse; font-size: 15px; margin-top: 6px; }
+  .api-tbl td { padding: 5px 10px; border-bottom: 1px solid var(--border); color: var(--ink); }
+  .api-tbl td:first-child { font-family: var(--mono); color: var(--accent); width: 110px; }
+  .api-tbl tr:last-child td { border-bottom: none; }
+
+  .s2 {
+    display: flex; gap: 10px; margin-top: 6px;
+  }
+  .s2 .sc {
+    flex: 1; background: var(--code-bg); border-radius: 4px; padding: 12px 14px;
+  }
+  .s2 .sc h5 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+  .s2 .sc p { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>数据层</p></div>
+  <h1>Datasets 库深度解析</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">存储引擎 · Apache Arrow</p>
+    <div class="cx">
+      <div class="ar-stack">
+        <div class="ar t">Dataset API Layer</div>
+        <div class="ar m">Apache Arrow · 列式内存 · 零拷贝 · 内存映射</div>
+        <div class="ar b">Parquet / JSON / CSV / 本地文件</div>
+      </div>
+      <p>Arrow 优势：只读所需列 · 零序列化 · 可映射超大 RAM 的数据集</p>
+    </div>
+
+    <p class="cl" style="margin-top:6px;">核心 API</p>
+    <div class="cx">
+      <h4>数据加载</h4>
+      <p><code>load_dataset("rajpurkar/squad")</code> — Hub 加载</p>
+      <p><code>load_dataset(..., streaming=True)</code> — 流式</p>
+      <p><code>load_dataset("json", data_files="d.jsonl")</code> — 本地</p>
+    </div>
+    <div class="cx">
+      <h4>缓存机制</h4>
+      <p>map() 计算输入指纹 → 检查缓存 → 命中加载/未命中执行写入</p>
+      <p small>路径: ~/.cache/huggingface/datasets/</p>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">处理方法 · 流式 · 多模态</p>
+    <div class="cx">
+      <h4>数据处理方法</h4>
+      <table class="api-tbl">
+        <tr><td>map()</td><td>逐样本/批量应用函数，num_proc 多进程</td></tr>
+        <tr><td>filter()</td><td>按条件过滤样本</td></tr>
+        <tr><td>shuffle()</td><td>打乱数据集</td></tr>
+        <tr><td>set_format()</td><td>设置输出格式（torch/tf/numpy）</td></tr>
+        <tr><td>train_test_split()</td><td>划分训练/测试集</td></tr>
+      </table>
+    </div>
+    <div class="cx">
+      <h4>流式 vs 非流式</h4>
+      <div class="s2">
+        <div class="sc"><h5 style="color:var(--accent);">非流式</h5><p>全部加载到内存 · 任意索引 · 全局 shuffle</p></div>
+        <div class="sc"><h5 style="color:var(--accent-rust);">流式</h5><p>只保留当前批次 · 顺序访问 · 缓冲区 shuffle</p></div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>多模态 &amp; Hub 集成</h4>
+      <p>支持文本、图像 <code>Image()</code>、音频 <code>Audio()</code>、视频 <code>Video()</code></p>
+      <p><code>dataset.push_to_hub("my-dataset")</code> · Git 版本控制</p>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第三章 · Datasets 库</p><p>05 / 14</p></div>
+</body>
+</html>

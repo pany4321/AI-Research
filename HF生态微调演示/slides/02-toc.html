@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>02 · 目录 — 报告章节概览</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .toc {
+    position: absolute; top: 150px; left: 80px; right: 80px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px 60px;
+  }
+  .toc-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0; border-bottom: 1px solid var(--border);
+  }
+  .toc-item:last-child,
+  .toc-item:nth-last-child(2) { border-bottom: none; }
+  .toc-item .num {
+    font-family: var(--mono); font-size: 15px; color: var(--accent);
+    width: 32px; flex-shrink: 0;
+  }
+  .toc-item .label { font-size: 18px; color: var(--ink-muted); }
+  .toc-item .label strong { color: var(--ink); font-weight: 500; }
+  .toc-item .pg {
+    margin-left: auto; font-size: 14px; color: var(--ink-light); flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>目录</p></div>
+  <h1>报告章节概览</h1>
+</div>
+
+<div class="toc">
+  <div class="toc-item"><span class="num">01</span><span class="label"><strong>报告概述</strong> · 背景与层次架构</span><span class="pg">p.1</span></div>
+  <div class="toc-item"><span class="num">02</span><span class="label"><strong>Transformers</strong> · 核心库深度解析</span><span class="pg">p.4</span></div>
+  <div class="toc-item"><span class="num">03</span><span class="label"><strong>Datasets</strong> · 数据处理层</span><span class="pg">p.8</span></div>
+  <div class="toc-item"><span class="num">04</span><span class="label"><strong>Accelerate</strong> · 分布式训练引擎</span><span class="pg">p.11</span></div>
+  <div class="toc-item"><span class="num">05</span><span class="label"><strong>PEFT</strong> · 参数高效微调</span><span class="pg">p.14</span></div>
+  <div class="toc-item"><span class="num">06</span><span class="label"><strong>四库协作</strong> · 运行时调用关系</span><span class="pg">p.18</span></div>
+  <div class="toc-item"><span class="num">07</span><span class="label"><strong>LLaMA-Factory</strong> · 一站式微调框架</span><span class="pg">p.21</span></div>
+  <div class="toc-item"><span class="num">08</span><span class="label"><strong>LLaMA-Factory 架构</strong> · 内部分析</span><span class="pg">p.24</span></div>
+  <div class="toc-item"><span class="num">09</span><span class="label"><strong>Unsloth</strong> · 极致性能框架</span><span class="pg">p.28</span></div>
+  <div class="toc-item"><span class="num">10</span><span class="label"><strong>Axolotl</strong> · 企业级框架</span><span class="pg">p.31</span></div>
+  <div class="toc-item"><span class="num">11</span><span class="label"><strong>三大框架对比</strong> · 选型建议</span><span class="pg">p.35</span></div>
+  <div class="toc-item"><span class="num">12</span><span class="label"><strong>总结</strong> · 架构总结与推荐路线</span><span class="pg">p.38</span></div>
+</div>
+
+<div class="page-footer"><p>目录</p><p>02 / 14</p></div>
+</body>
+</html>

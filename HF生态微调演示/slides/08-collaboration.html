@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>08 · 四库协作 — 运行时调用关系</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 12px; letter-spacing: 0.04em; }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx .code {
+    font-family: var(--mono); font-size: 14px; line-height: 1.5;
+    background: var(--code-bg); border-radius: 3px;
+    padding: 12px 16px; margin-top: 6px; color: var(--ink);
+  }
+  .cx .code .kw { color: #994CC5; }
+  .cx .code .fn { color: #1A5C4A; }
+  .cx .code .cm { color: var(--ink-light); font-style: italic; }
+
+  .dep {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    margin: 8px 0;
+  }
+  .dep .r { display: flex; gap: 10px; }
+  .dep .b {
+    font-family: var(--mono); font-size: 13px; padding: 6px 20px; border-radius: 4px; text-align: center;
+  }
+  .dep .ar { color: var(--ink-light); font-size: 18px; }
+
+  .df {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px; margin: 6px 0;
+  }
+  .df .b {
+    font-size: 13px; padding: 5px 12px; border-radius: 3px; text-align: center; white-space: nowrap;
+  }
+  .df .a { color: var(--ink-light); font-size: 14px; padding: 0 2px; }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>协作机制</p></div>
+  <h1>四大核心库的协作与数据流</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">依赖层次</p>
+    <div class="cx">
+      <div class="dep">
+        <div class="r"><div class="b" style="background:#1A5C4A; color:white; font-weight:600;">用户代码</div></div>
+        <div class="ar">↓</div>
+        <div class="r"><div class="b" style="background:#E8F0ED; color:#1A5C4A; font-weight:600;">PEFT · LoRA/Qlora 适配器</div></div>
+        <div class="ar">↓</div>
+        <div class="r"><div class="b" style="background:#EDF0F5; color:#4A6FA5; font-weight:600;">Accelerate · 分布式</div></div>
+        <div class="ar">↓</div>
+        <div class="r">
+          <div class="b" style="background:#F5F0E0; color:#8B6914;">Transformers</div>
+          <div class="b" style="background:#EDEBE6; color:#6B6B6B;">Datasets</div>
+          <div class="b" style="background:#E8E4DA; color:#555;">Hub</div>
+        </div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>关键调用关系</h4>
+      <p><strong>Transformers → Accelerate</strong>：Trainer 内部创建 Accelerator，使用 accelerator.backward()</p>
+      <p><strong>Transformers → PEFT</strong>：通过 PeftAdapterMixin 注入适配器</p>
+      <p><strong>PEFT → Accelerate</strong>：量化模型加载时使用设备映射</p>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">运行时数据流</p>
+    <div class="cx">
+      <h4>完整链路</h4>
+      <div class="df">
+        <div class="b" style="background:#EDEBE6;">JSONL</div><div class="a">→</div>
+        <div class="b" style="background:#EDEBE6; font-weight:600;">Datasets</div><div class="a">→</div>
+        <div class="b" style="background:#EDEBE6;">Arrow</div><div class="a">→</div>
+        <div class="b" style="background:#F5F0E0;">DLoader</div><div class="a">→</div>
+        <div class="b" style="background:#F5F0E0; font-weight:600;">Transformers</div><div class="a">→</div>
+        <div class="b" style="background:#E8F0ED;">PEFT</div><div class="a">→</div>
+        <div class="b" style="background:#EDF0F5;">Accelerate</div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>代码级协作示例</h4>
+      <div class="code">
+        <span class="cm"># 1. Datasets 加载数据</span><br>
+        dataset = <span class="fn">load_dataset</span>(<span class="cm">"json"</span>, data_files=<span class="cm">"data.jsonl"</span>)
+      </div>
+      <div class="code" style="margin-top:4px;">
+        <span class="cm"># 2. Transformers 加载模型 + PEFT 注入</span><br>
+        model = AutoModelForCausalLM.<span class="fn">from_pretrained</span>(<span class="cm">"Qwen3-8B"</span>)<br>
+        model = <span class="fn">get_peft_model</span>(model, LoraConfig(r=16))
+      </div>
+      <div class="code" style="margin-top:4px;">
+        <span class="cm"># 3. Accelerate 准备 + Trainer 训练</span><br>
+        model, opt, dl = accelerator.<span class="fn">prepare</span>(model, opt, dl)<br>
+        trainer.<span class="fn">train</span>() &nbsp;<span class="cm"># 内部调 accelerator.backward()</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第六章 · 四库协作</p><p>08 / 14</p></div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>06 · Accelerate — 分布式训练引擎</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl {
+    font-size: 16px; font-weight: 600; color: var(--accent);
+    margin-bottom: 12px; letter-spacing: 0.04em;
+  }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx p small { font-size: 14px; color: var(--ink-light); }
+  .cx .code {
+    font-family: var(--mono); font-size: 14px; line-height: 1.5;
+    background: var(--code-bg); border-radius: 3px;
+    padding: 12px 16px; margin-top: 6px; color: var(--ink);
+  }
+  .cx .code .kw { color: #994CC5; }
+  .cx .code .fn { color: #1A5C4A; }
+  .cx .code .cm { color: var(--ink-light); font-style: italic; }
+
+  .d3 { display: flex; gap: 8px; margin-top: 6px; }
+  .d3 .di {
+    flex: 1; background: var(--accent-light); border-radius: 4px;
+    padding: 10px; text-align: center;
+  }
+  .d3 .di h5 { font-family: var(--mono); font-size: 14px; color: var(--accent); margin-bottom: 3px; }
+  .d3 .di p { font-size: 13px; color: var(--ink-muted); line-height: 1.4; }
+
+  .fp3 { display: flex; gap: 8px; margin-top: 6px; }
+  .fp3 .fi {
+    flex: 1; text-align: center; padding: 8px 6px;
+    border-radius: 4px; background: var(--code-bg);
+  }
+  .fp3 .fi h5 { font-family: var(--mono); font-size: 13px; margin-bottom: 2px; }
+  .fp3 .fi p { font-size: 12px; color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>扩展层</p></div>
+  <h1>Accelerate 分布式训练引擎</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">核心架构</p>
+    <div class="cx">
+      <h4>Accelerator · 核心编排器</h4>
+      <p>设备管理 · 混合精度 · 分布式后端选择 · 梯度同步</p>
+      <div class="code">
+        accelerator = Accelerator(<span class="fn">mixed_precision</span>=<span class="cm">"bf16"</span>)<br>
+        model, opt, dl = accelerator.<span class="fn">prepare</span>(model, optimizer, dataloader)<br>
+        accelerator.<span class="fn">backward</span>(loss)
+      </div>
+    </div>
+    <div class="cx">
+      <h4>Plugin 系统</h4>
+      <p>DeepSpeedPlugin · FullyShardedDataParallelPlugin · MegatronPlugin</p>
+      <p small>通过 YAML 配置文件或 Python API 启用</p>
+    </div>
+    <div class="cx">
+      <h4>混合精度训练</h4>
+      <div class="fp3">
+        <div class="fi"><h5>FP16</h5><p>GradScaler 管理</p></div>
+        <div class="fi"><h5>BF16</h5><p>无需 scaler</p></div>
+        <div class="fi"><h5>FP8</h5><p>TransEngine</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">分布式后端 &amp; 工具函数</p>
+    <div class="cx">
+      <h4>DDP — Distributed DataParallel</h4>
+      <p>每 GPU 一份完整模型 · 梯度 all-reduce · 适用单机多卡</p>
+    </div>
+    <div class="cx">
+      <h4>DeepSpeed ZeRO</h4>
+      <div class="d3">
+        <div class="di"><h5>ZeRO-1</h5><p>优化器分片<br>低通信量</p></div>
+        <div class="di"><h5>ZeRO-2</h5><p>优化器+梯度<br>中通信量</p></div>
+        <div class="di"><h5>ZeRO-3</h5><p>全分片<br>高通信量</p></div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>FSDP</h4>
+      <div class="fp3">
+        <div class="fi"><h5 style="color:#4A6FA5;">FULL_SHARD</h5><p>参数+梯度+优化器</p></div>
+        <div class="fi"><h5 style="color:#4A6FA5;">SHARD_GRAD_OP</h5><p>梯度+优化器</p></div>
+        <div class="fi"><h5 style="color:#4A6FA5;">NO_SHARD</h5><p>仅数据并行</p></div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>工具函数</h4>
+      <p><code>notebook_launcher</code> — Jupyter 多 GPU 启动</p>
+      <p><code>find_executable_batch_size</code> — 自动搜索最大 batch</p>
+      <p><code>tqdm</code> — 分布式进度条</p>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>第四章 · Accelerate 库</p><p>06 / 14</p></div>
+</body>
+</html>

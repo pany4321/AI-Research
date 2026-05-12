@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>03 · 架构总览 — 六层技术栈全景</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+
+  /* 左侧架构 */
+  .stack {
+    position: absolute; top: 140px; left: 80px;
+    width: 1020px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .s-layer {
+    background: var(--surface); border-radius: 6px; padding: 14px 24px;
+    display: flex; align-items: center;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.04);
+  }
+  .s-layer .ll { display: flex; align-items: center; gap: 16px; min-width: 200px; flex-shrink: 0; }
+  .s-layer .ll .rank { font-family: var(--mono); font-size: 13px; color: var(--ink-light); width: 24px; }
+  .s-layer .ll h3 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .s-layer .desc { flex: 1; padding: 0 16px; }
+  .s-layer .desc p { font-size: 16px; color: var(--ink-muted); line-height: 1.4; }
+  .s-layer .lr { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .s-layer .lr .badge {
+    font-family: var(--mono); font-size: 12px; padding: 4px 16px; border-radius: 99px; white-space: nowrap;
+  }
+  .s-layer .lr .stat { font-family: var(--display); font-size: 16px; font-weight: 700; white-space: nowrap; }
+  .s-layer + .s-layer { position: relative; }
+  .s-layer + .s-layer::before {
+    content: ''; position: absolute; top: -4px; left: 48px; right: 48px;
+    height: 1px;
+    background: repeating-linear-gradient(90deg, var(--border) 0px, var(--border) 4px, transparent 4px, transparent 8px);
+  }
+
+  /* 右侧面板 */
+  .right-panel {
+    position: absolute; top: 140px; right: 80px;
+    width: 520px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .right-panel .ph { margin-bottom: 2px; }
+  .right-panel .ph h3 { font-size: 18px; font-weight: 600; color: var(--ink); }
+
+  .data-card {
+    background: var(--surface); border-radius: 6px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+  }
+  .data-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+  }
+  .data-row + .data-row { border-top: 1px solid var(--border); }
+  .data-row .lbl {
+    font-size: 15px; color: var(--ink-muted);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .data-row .lbl .dot { width: 7px; height: 7px; border-radius: 999px; flex-shrink: 0; }
+  .data-row .val {
+    font-family: var(--display); font-size: 20px; font-weight: 700; color: var(--ink);
+  }
+  .data-row .val .u { font-size: 14px; font-weight: 400; color: var(--ink-muted); margin-left: 2px; }
+
+  .fw-list { display: flex; gap: 10px; flex-wrap: wrap; }
+  .fw-list .fw {
+    font-family: var(--mono); font-size: 13px;
+    padding: 6px 18px; border-radius: 6px;
+    background: var(--accent-light); color: var(--accent);
+  }
+
+  .footnote {
+    position: absolute; bottom: 64px; left: 80px;
+    font-size: 14px; color: var(--ink-light);
+  }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>架构总览</p></div>
+  <h1>六层技术栈全景</h1>
+</div>
+
+<div class="stack">
+  <div class="s-layer">
+    <div class="ll"><span class="rank">06</span><h3 style="color:#1A5C4A;">LLaMA-Factory</h3></div>
+    <div class="desc"><p>一站式微调框架，Web UI / CLI / LlamaBoard</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#1A5C4A;">100+</span>
+      <span class="badge" style="background:#E8F0ED; color:#1A5C4A;">应用层</span>
+    </div>
+  </div>
+  <div class="s-layer" style="border-left:3px solid #C75B3A;">
+    <div class="ll"><span class="rank">05</span><h3 style="color:#C75B3A;">TRL</h3></div>
+    <div class="desc"><p>强化学习对齐，SFT / DPO / PPO / GRPO</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#C75B3A;">6+ 算法</span>
+      <span class="badge" style="background:#FDF0EC; color:#C75B3A;">对齐层</span>
+    </div>
+  </div>
+  <div class="s-layer" style="border-left:3px solid #2E7D6B;">
+    <div class="ll"><span class="rank">04</span><h3 style="color:#2E7D6B;">PEFT</h3></div>
+    <div class="desc"><p>参数高效微调，LoRA / QLoRA / DoRA 等</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#2E7D6B;">10+ 方法</span>
+      <span class="badge" style="background:#EAF2EF; color:#2E7D6B;">效率层</span>
+    </div>
+  </div>
+  <div class="s-layer" style="border-left:3px solid #4A6FA5;">
+    <div class="ll"><span class="rank">03</span><h3 style="color:#4A6FA5;">Accelerate</h3></div>
+    <div class="desc"><p>分布式训练，4 行代码改造即可运行</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#4A6FA5;">4行接入</span>
+      <span class="badge" style="background:#EDF0F5; color:#4A6FA5;">扩展层</span>
+    </div>
+  </div>
+  <div class="s-layer" style="border-left:3px solid #8B6914;">
+    <div class="ll"><span class="rank">02</span><h3 style="color:#8B6914;">Transformers</h3></div>
+    <div class="desc"><p>核心模型库，AutoModel / Pipeline / Trainer</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#8B6914;">400+ 架构</span>
+      <span class="badge" style="background:#F5F0E0; color:#8B6914;">模型层</span>
+    </div>
+  </div>
+  <div class="s-layer" style="border-left:3px solid #6B6B6B;">
+    <div class="ll"><span class="rank">01</span><h3 style="color:#6B6B6B;">Datasets</h3></div>
+    <div class="desc"><p>数据基础设施，基于 Apache Arrow</p></div>
+    <div class="lr">
+      <span class="stat" style="color:#666;">Arrow 引擎</span>
+      <span class="badge" style="background:#EDEBE6; color:#6B6B6B;">数据层</span>
+    </div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="ph"><h3>关键数据</h3></div>
+  <div class="data-card">
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#1A5C4A;"></span>模型架构支持</span><span class="val">400+ <span class="u">种</span></span></div>
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#C75B3A;"></span>内置 Pipeline</span><span class="val">30+ <span class="u">种</span></span></div>
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#2E7D6B;"></span>参数更新比例</span><span class="val">0.01%–1%</span></div>
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#4A6FA5;"></span>分布式后端</span><span class="val">3 <span class="u">种</span></span></div>
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#8B6914;"></span>Tokenizer 类型</span><span class="val">3 <span class="u">种</span></span></div>
+    <div class="data-row"><span class="lbl"><span class="dot" style="background:#6B6B6B;"></span>数据模态</span><span class="val">5 <span class="u">种</span></span></div>
+  </div>
+  <div class="ph" style="margin-top:4px;"><h3>上层框架</h3></div>
+  <div class="data-card">
+    <div class="fw-list">
+      <span class="fw">LLaMA-Factory</span>
+      <span class="fw" style="background:#FDF0EC; color:#C75B3A;">Unsloth</span>
+      <span class="fw" style="background:var(--code-bg); color:var(--ink-muted);">Axolotl</span>
+    </div>
+  </div>
+</div>
+
+<p class="footnote">从数据处理到模型部署 · Hugging Face 生态全覆盖</p>
+<div class="page-footer"><p>第一章 · 架构总览</p><p>03 / 14</p></div>
+</body>
+</html>

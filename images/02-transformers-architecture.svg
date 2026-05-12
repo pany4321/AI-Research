@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 700">
+  <defs>
+    <linearGradient id="topGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffd700;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="coreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="backendGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+    </linearGradient>
+    <filter id="dropShadow">
+      <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.25"/>
+    </filter>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#666"/>
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="35" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" font-weight="bold" fill="#1a1a2e">Transformers 库架构全景</text>
+
+  <!-- Top Layer: User APIs -->
+  <g transform="translate(50, 60)" filter="url(#dropShadow)">
+    <rect width="800" height="100" rx="10" fill="url(#topGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🥇 顶层 API（用户直接使用）</text>
+
+    <!-- API Boxes -->
+    <g transform="translate(20, 45)">
+      <rect width="170" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="85" y="20" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Pipeline API</text>
+      <text x="85" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">一行代码推理</text>
+
+      <rect x="190" width="170" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="275" y="20" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Auto Classes</text>
+      <text x="275" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">自动模型加载</text>
+
+      <rect x="380" width="170" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="465" y="20" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Trainer API</text>
+      <text x="465" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">完整训练循环</text>
+
+      <rect x="570" width="170" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="655" y="20" text-anchor="middle" font-family="Arial" font-size="12" font-weight="bold" fill="#fff">Generation API</text>
+      <text x="655" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">文本生成策略</text>
+    </g>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="170" x2="450" y2="190" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Core Subsystems -->
+  <g transform="translate(50, 200)" filter="url(#dropShadow)">
+    <rect width="800" height="180" rx="10" fill="url(#coreGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🛠️ 核心子系统</text>
+
+    <!-- Subsystem boxes -->
+    <g transform="translate(20, 45)">
+      <!-- Model System -->
+      <rect width="230" height="120" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="115" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">模型系统</text>
+      <text x="115" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">PreTrainedModel</text>
+      <text x="115" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">├── LlamaModel</text>
+      <text x="115" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">├── Qwen2Model</text>
+      <text x="115" y="90" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">├── BertModel</text>
+      <text x="115" y="105" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">└── 400+ 架构</text>
+
+      <!-- Tokenizer -->
+      <rect x="250" width="230" height="120" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="365" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">分词系统</text>
+      <text x="365" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">Tokenizer / Processor</text>
+      <text x="365" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">├── Slow (Python)</text>
+      <text x="365" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">├── Fast (Rust)</text>
+      <text x="365" y="90" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">└── SentencePiece</text>
+      <text x="365" y="105" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">文本 ↔ ID 映射</text>
+
+      <!-- Config System -->
+      <rect x="500" width="140" height="120" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="570" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">配置系统</text>
+      <text x="570" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">PretrainedConfig</text>
+      <text x="570" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">TrainingArguments</text>
+      <text x="570" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">GenerationConfig</text>
+      <text x="570" y="90" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">JSON 驱动</text>
+
+      <!-- Hub Integration -->
+      <rect x="660" width="120" height="120" rx="5" fill="rgba(255,255,255,0.2)"/>
+      <text x="720" y="25" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">Hub 集成</text>
+      <text x="720" y="45" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">模型下载</text>
+      <text x="720" y="60" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">权重缓存</text>
+      <text x="720" y="75" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">模型卡片</text>
+      <text x="720" y="90" text-anchor="middle" font-family="Arial" font-size="10" fill="#e0e0ff">Git 版本</text>
+    </g>
+  </g>
+
+  <!-- Arrow -->
+  <line x1="450" y1="390" x2="450" y2="410" stroke="#666" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Backend Layer -->
+  <g transform="translate(50, 420)" filter="url(#dropShadow)">
+    <rect width="800" height="100" rx="10" fill="url(#backendGrad)"/>
+    <text x="400" y="30" text-anchor="middle" font-family="Arial" font-size="16" font-weight="bold" fill="#fff">🔌 后端支持</text>
+
+    <g transform="translate(20, 45)">
+      <rect width="220" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="110" y="20" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">PyTorch (主力)</text>
+      <text x="110" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">v5 唯一后端</text>
+
+      <rect x="240" width="220" height="45" rx="5" fill="rgba(255,255,255,0.1)"/>
+      <text x="350" y="20" text-anchor="middle" font-family="Arial" font-size="13" fill="#ccc">TensorFlow (v5 移除)</text>
+      <text x="350" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#ccc">v4 及之前支持</text>
+
+      <rect x="480" width="220" height="45" rx="5" fill="rgba(255,255,255,0.1)"/>
+      <text x="590" y="20" text-anchor="middle" font-family="Arial" font-size="13" fill="#ccc">JAX/Flax (v5 移除)</text>
+      <text x="590" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#ccc">v4 及之前支持</text>
+
+      <rect x="720" width="160" height="45" rx="5" fill="rgba(255,255,255,0.3)"/>
+      <text x="800" y="20" text-anchor="middle" font-family="Arial" font-size="13" font-weight="bold" fill="#fff">torch.compile</text>
+      <text x="800" y="38" text-anchor="middle" font-family="Arial" font-size="10" fill="#fff">JIT 编译加速</text>
+    </g>
+  </g>
+
+  <!-- Flow arrows from top to core -->
+  <line x1="200" y1="165" x2="200" y2="185" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+  <line x1="350" y1="165" x2="350" y2="185" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+  <line x1="500" y1="165" x2="500" y2="185" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+  <line x1="650" y1="165" x2="650" y2="185" stroke="#fff" stroke-width="1.5" opacity="0.5"/>
+</svg>

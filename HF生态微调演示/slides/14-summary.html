@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>14 · 总结 — 架构总结与推荐路线</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/tokens.css">
+<style>
+  .title-area { position: absolute; top: 48px; left: 80px; }
+  .cols2 {
+    position: absolute; top: 155px; left: 80px; right: 80px;
+    display: flex; gap: 24px;
+  }
+  .col { flex: 1; }
+  .cl { font-size: 16px; font-weight: 600; color: var(--accent); margin-bottom: 12px; letter-spacing: 0.04em; }
+  .cx {
+    background: var(--surface); border-radius: 5px; padding: 18px 22px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04); border: 1px solid rgba(0,0,0,0.04);
+    margin-bottom: 10px;
+  }
+  .cx h4 { font-size: 18px; font-weight: 600; margin-bottom: 6px; }
+  .cx p { font-size: 16px; color: var(--ink-muted); line-height: 1.5; }
+  .cx p strong { color: var(--ink); }
+
+  .pos { display: flex; flex-direction: column; gap: 4px; }
+  .pos .pp {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 12px; border-radius: 3px; font-size: 15px;
+  }
+  .pos .pp .d { width: 10px; height: 10px; border-radius: 999px; flex-shrink: 0; }
+
+  .rm { display: flex; flex-direction: column; gap: 4px; margin: 6px 0; }
+  .rm .r {
+    display: flex; align-items: center; gap: 14px;
+    padding: 8px 14px; border-radius: 4px; font-size: 15px;
+  }
+  .rm .r .n {
+    width: 26px; height: 26px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .rm .r .ar { color: var(--ink-light); font-size: 16px; }
+
+  .qt { display: flex; gap: 14px; margin-top: 6px; }
+  .qt .q {
+    flex: 1; padding: 14px 16px; border-radius: 4px; border-left: 3px solid;
+  }
+  .qt .q p { font-size: 14px; line-height: 1.5; }
+  .qt .q .src { font-size: 12px; color: var(--ink-light); margin-top: 4px; font-family: var(--mono); }
+</style>
+</head>
+<body>
+<div class="masthead"></div>
+
+<div class="title-area">
+  <div class="kicker"><span class="line"></span><p>总结</p></div>
+  <h1>架构总结与推荐路线</h1>
+</div>
+
+<div class="cols2">
+  <!-- 左栏 -->
+  <div class="col">
+    <p class="cl">各库核心定位</p>
+    <div class="cx">
+      <div class="pos">
+        <div class="pp"><span class="d" style="background:#EDEBE6;"></span><strong>Datasets</strong> — 数据层：高效加载、处理、缓存</div>
+        <div class="pp"><span class="d" style="background:#F5F0E0;"></span><strong>Transformers</strong> — 模型层：统一架构、训练、推理</div>
+        <div class="pp"><span class="d" style="background:#EDF0F5;"></span><strong>Accelerate</strong> — 扩展层：透明分布式 + 混合精度</div>
+        <div class="pp"><span class="d" style="background:#E8F0ED;"></span><strong>PEFT</strong> — 效率层：参数高效微调</div>
+        <div class="pp"><span class="d" style="background:#FDF0EC;"></span><strong>TRL</strong> — 对齐层：RLHF 与偏好对齐</div>
+        <div class="pp"><span class="d" style="background:#1A5C4A;"></span><strong style="color:var(--accent);">LLaMA-Factory</strong> — 应用层：一站式微调</div>
+      </div>
+    </div>
+    <div class="cx">
+      <h4>发展趋势（2026）</h4>
+      <p>一体化 · 长上下文 (100K+) · 多模态 · 自动化超参搜索 · 硬件适配</p>
+    </div>
+  </div>
+
+  <!-- 右栏 -->
+  <div class="col">
+    <p class="cl">推荐路线 &amp; 关键洞察</p>
+    <div class="cx">
+      <h4>推荐学习路线</h4>
+      <div class="rm">
+        <div class="r" style="background:#E8F0ED;">
+          <span class="n" style="background:#1A5C4A; color:white;">1</span>
+          <span>LLaMA-Factory Web UI 零代码入门</span>
+          <span class="ar">→</span>
+          <span style="color:var(--ink-light);">理解 LoRA</span>
+        </div>
+        <div class="r" style="background:#FDF0EC;">
+          <span class="n" style="background:#C75B3A; color:white;">2</span>
+          <span>Unsloth 加速训练 · 自制数据集</span>
+          <span class="ar">→</span>
+          <span style="color:var(--ink-light);">调参优化</span>
+        </div>
+        <div class="r" style="background:#EDF0F5;">
+          <span class="n" style="background:#4A6FA5; color:white;">3</span>
+          <span>Axolotl YAML 标准化 · 多 GPU</span>
+          <span class="ar">→</span>
+          <span style="color:var(--ink-light);">生产部署</span>
+        </div>
+      </div>
+    </div>
+    <div class="cx">
+      <div class="qt">
+        <div class="q" style="border-left-color:#1A5C4A; background:#E8F0ED;">
+          <p>「模块化、可组合、独立使用」</p>
+          <p class="src">HF 生态设计哲学</p>
+        </div>
+        <div class="q" style="border-left-color:#C75B3A; background:#FDF0EC;">
+          <p>「一体化、开箱即用、一站式」</p>
+          <p class="src">LLaMA-Factory 设计哲学</p>
+        </div>
+      </div>
+    </div>
+    <div class="cx">
+      <p style="font-size:16px;"><strong>三个框架可以共存使用：</strong>LLaMA-Factory 快速实验 → Unsloth 大规模加速 → Axolotl 标准化部署。理解底层 HF 库的原理，才能在任何框架下灵活调试。</p>
+    </div>
+  </div>
+</div>
+
+<div class="page-footer"><p>总结与推荐路线</p><p>14 / 14</p></div>
+</body>
+</html>
